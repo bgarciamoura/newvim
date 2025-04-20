@@ -69,6 +69,7 @@ return {
 				{ name = "luasnip", priority = 750 },
 				{ name = "buffer", priority = 500 },
 				{ name = "path", priority = 250 },
+				{ name = "lazydev", priority = 200 },
 			}),
 			formatting = {
 				format = lspkind.cmp_format({
