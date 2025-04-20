@@ -1,12 +1,12 @@
 ---@diagnostic disable-next-line: undefined-global
 local vim = vim
 
+
 require("core.options")
 require("core.keymaps")
 require("core.diagnostics")
 require("core.autocmds")
 require("core.lazy")
-
 
 local lsp_dir = vim.fn.stdpath('config') .. '/lua/lsp'
 for _, file in ipairs(vim.fn.readdir(lsp_dir, [[v:val =~ '\.lua$']])) do

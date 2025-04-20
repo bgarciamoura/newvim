@@ -55,9 +55,31 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- Ativar floating window for diagnostic
 vim.api.nvim_create_autocmd("CursorHold", {
+  group = vim.api.nvim_create_augroup("ShowDiagnosticsFloat", { clear = true }),
   callback = function()
-    if vim.fn.mode() == "n" then
-      vim.diagnostic.open_float(nil, { focus = false })
+    -- Verifica se está no modo Normal
+    if vim.fn.mode() ~= "n" then return end
+
+    -- Obtém a configuração atual de diagnósticos
+    local config = vim.diagnostic.config()
+    local virtual_text = config.virtual_text
+
+    -- Verifica se virtual_text está desativado
+    local is_virtual_text_disabled = false
+    if virtual_text == false then
+      is_virtual_text_disabled = true
+    elseif type(virtual_text) == "table" and virtual_text.prefix == nil then
+      is_virtual_text_disabled = true
+    end
+
+    -- Se virtual_text estiver desativado, exibe a janela flutuante
+    if is_virtual_text_disabled then
+      vim.diagnostic.open_float(nil, {
+        focus = false,
+        scope = "line",
+        source = "always",
+        border = "rounded",
+      })
     end
   end,
 })

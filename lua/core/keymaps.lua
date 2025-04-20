@@ -7,7 +7,33 @@ vim.keymap.set('i', '<C-Space>', function()
 end, { desc = 'Trigger LSP completion' })
 
 -- Diagnosticos
-vim.keymap.set('n', '<leader>d', function()
-  vim.diagnostic.open_float(nil, { scope = 'line', focus = false })
-end, { desc = 'Exibir diagnósticos da linha atual' })
+-- Variável para rastrear o estado atual
+local diagnostics_inline = true
 
+-- Função para alternar diagnósticos
+local function toggle_diagnostics()
+  diagnostics_inline = not diagnostics_inline
+
+  if diagnostics_inline then
+    -- Ativa diagnósticos inline e desativa float
+    vim.diagnostic.config({
+      virtual_text = { prefix = '●', spacing = 4 },
+      float = false,
+    })
+    vim.notify("Diagnósticos inline ativados", vim.log.levels.INFO)
+  else
+    -- Desativa diagnósticos inline e ativa float
+    vim.diagnostic.config({
+      virtual_text = false,
+      float = {
+        source = "always",
+        border = "rounded",
+        focusable = false,
+      },
+    })
+    vim.notify("Diagnósticos flutuantes ativados", vim.log.levels.INFO)
+  end
+end
+
+-- Mapeia a tecla <leader>d para alternar diagnósticos
+vim.keymap.set('n', '<leader>d', toggle_diagnostics, { desc = 'Alternar diagnósticos inline/float' })
