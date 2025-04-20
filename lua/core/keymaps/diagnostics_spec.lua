@@ -1,13 +1,4 @@
--- vim.keymap.set("n", "<leader>e", ":Lexplore<cr>", { silent = true })
-vim.keymap.set("n", "<leader>l", ":checkhealth vim.lsp<cr>", { silent = true })
-vim.keymap.set("i", "<C-s>", "<esc>:w<cr>", { silent = true })
--- Autocomplete
-vim.keymap.set("i", "<C-Space>", function()
-	vim.lsp.completion.get()
-end, { desc = "Trigger LSP completion" })
-
--- Diagnosticos
--- Variável para rastrear o estado atual
+local vim = vim
 local diagnostics_inline = true
 
 -- Função para alternar diagnósticos
@@ -36,4 +27,13 @@ local function toggle_diagnostics()
 end
 
 -- Mapeia a tecla <leader>d para alternar diagnósticos
-vim.keymap.set("n", "<leader>d", toggle_diagnostics, { desc = "Alternar diagnósticos inline/float" })
+return {
+	mappings = {
+		{
+			"n",
+			"<leader>d",
+			toggle_diagnostics,
+			"Alternar diagnósticos inline/float",
+		},
+	},
+}
