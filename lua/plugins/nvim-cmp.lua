@@ -11,6 +11,7 @@ return {
 		"L3MON4D3/LuaSnip", -- Engine de snippets
 		"rafamadriz/friendly-snippets", -- Coleção de snippets
 		"onsails/lspkind.nvim", -- Ícones para o cmp
+		"zbirenbaum/copilot-cmp", -- Integração com o Copilot
 	},
 	config = function()
 		local cmp = require("cmp")
