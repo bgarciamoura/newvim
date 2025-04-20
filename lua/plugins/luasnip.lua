@@ -32,5 +32,82 @@ return {
 		ls.filetype_extend("vue", { "html", "javascript" })
 		ls.filetype_extend("svelte", { "html", "javascript" })
 		ls.filetype_extend("astro", { "html", "javascript" })
+
+		local s = ls.snippet
+		local t = ls.text_node
+		local i = ls.insert_node
+
+		-- Adicionar snippets específicos para NestJS
+		ls.add_snippets("typescript", {
+			-- Módulo NestJS
+			s("nmodule", {
+				t("import { Module } from '@nestjs/common';"),
+				t({ "", "" }),
+				t("@Module({"),
+				t({ "", "  imports: [" }),
+				i(1, ""),
+				t({ "", "  ]," }),
+				t({ "", "  controllers: [" }),
+				i(2, ""),
+				t({ "", "  ]," }),
+				t({ "", "  providers: [" }),
+				i(3, ""),
+				t({ "", "  ]," }),
+				t({ "", "  exports: [" }),
+				i(4, ""),
+				t({ "", "  ]," }),
+				t({ "", "}" }),
+				t({ "", "export class " }),
+				i(5, "Name"),
+				t("Module {}"),
+			}),
+
+			-- Controller NestJS
+			s("ncontroller", {
+				t("import { Controller } from '@nestjs/common';"),
+				t({ "", "" }),
+				t("@Controller('"),
+				i(1, "path"),
+				t("')"),
+				t({ "", "export class " }),
+				i(2, "Name"),
+				t("Controller {"),
+				t({ "", "  constructor(" }),
+				i(3, ""),
+				t(") {}"),
+				t({ "", "" }),
+				t({ "", "}" }),
+			}),
+
+			-- GET Endpoint
+			s("nget", {
+				t("@Get('"),
+				i(1, "path"),
+				t("')"),
+				t({ "", "async " }),
+				i(2, "methodName"),
+				t("("),
+				i(3, ""),
+				t(") {"),
+				t({ "", "  " }),
+				i(4, "return"),
+				t({ "", "}" }),
+			}),
+
+			-- Service NestJS
+			s("nservice", {
+				t("import { Injectable } from '@nestjs/common';"),
+				t({ "", "" }),
+				t("@Injectable()"),
+				t({ "", "export class " }),
+				i(1, "Name"),
+				t("Service {"),
+				t({ "", "  constructor(" }),
+				i(2, ""),
+				t(") {}"),
+				t({ "", "" }),
+				t({ "", "}" }),
+			}),
+		})
 	end,
 }
