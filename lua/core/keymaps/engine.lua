@@ -20,7 +20,7 @@ for _, file in ipairs(fn.globpath(fn.stdpath("config") .. "/lua/core/keymaps", "
 			vim.notify("Arquivo não retornou uma tabela válida: " .. file, vim.log.levels.WARN)
 		else
 			table.insert(specs, mod)
-			vim.notify("Arquivo sem erro" .. file, vim.log.levels.INFO)
+			-- vim.notify("Arquivo sem erro" .. file, vim.log.levels.INFO)
 		end
 	end
 end
