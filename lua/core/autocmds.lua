@@ -30,26 +30,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
-    if client:supports_method('textDocument/completion') then
+    if client:supports_method("textDocument/completion") then
       -- Optional: trigger autocompletion on EVERY keypress. May be slow!
       -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
       -- client.server_capabilities.completionProvider.triggerCharacters = chars
       vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
     end
 
-
-
     -- Auto-format ("lint") on save.
     -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-    if not client:supports_method('textDocument/willSaveWaitUntil')
-        and client:supports_method('textDocument/formatting') then
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        buffer = args.buf,
-        callback = function()
-          vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
-        end,
-      })
-    end
+    -- if not client:supports_method('textDocument/willSaveWaitUntil')
+    --     and client:supports_method('textDocument/formatting') then
+    --   vim.api.nvim_create_autocmd('BufWritePre', {
+    --     buffer = args.buf,
+    --     callback = function()
+    --       vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
+    --     end,
+    --   })
+    -- end
   end,
 })
 
@@ -58,7 +56,9 @@ vim.api.nvim_create_autocmd("CursorHold", {
   group = vim.api.nvim_create_augroup("ShowDiagnosticsFloat", { clear = true }),
   callback = function()
     -- Verifica se está no modo Normal
-    if vim.fn.mode() ~= "n" then return end
+    if vim.fn.mode() ~= "n" then
+      return
+    end
 
     -- Obtém a configuração atual de diagnósticos
     local config = vim.diagnostic.config()
@@ -85,16 +85,14 @@ vim.api.nvim_create_autocmd("CursorHold", {
 })
 
 -- Ativar virtual text
-vim.api.nvim_create_user_command('EnableVirtualText', function()
+vim.api.nvim_create_user_command("EnableVirtualText", function()
   vim.diagnostic.config({ virtual_text = true })
 end, {})
 
 -- Desativar virtual text
-vim.api.nvim_create_user_command('DisableVirtualText', function()
+vim.api.nvim_create_user_command("DisableVirtualText", function()
   vim.diagnostic.config({ virtual_text = false })
 end, {})
-
-
 
 -------------------------------------------------------------
 --- LINT FIX COM BIOME CASO EXISTA OU ESLINT COMO FALLBACK
@@ -102,34 +100,37 @@ end, {})
 
 -- Função para determinar a raiz do projeto
 local function get_project_root()
-  local root_files = { '.git', 'package.json', 'biome.json' }
+  local root_files = { ".git", "package.json", "biome.json" }
   return vim.fs.dirname(vim.fs.find(root_files, { upward = true })[1])
 end
 
 -- Função para verificar se 'biome.json' existe na raiz do projeto
 local function has_biome_config(root)
-  return root and vim.fn.filereadable(vim.fs.joinpath(root, 'biome.json')) == 1
+  return root and vim.fn.filereadable(vim.fs.joinpath(root, "biome.json")) == 1
 end
 
 -- Autocomando para aplicar correções ao salvar arquivos
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = { '*.js', '*.jsx', '*.ts', '*.tsx', '*.vue', '*.svelte', '*.astro' },
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.vue", "*.svelte", "*.astro" },
   callback = function()
     local root = get_project_root()
     if has_biome_config(root) then
       -- Aplicar correções com o Biome
-      vim.fn.jobstart({ 'biome', 'check', '--apply', vim.api.nvim_buf_get_name(0) }, {
+      vim.fn.jobstart({ "biome", "check", "--apply", vim.api.nvim_buf_get_name(0) }, {
         cwd = root,
         on_exit = function(_, code)
           if code ~= 0 then
-            vim.notify('Erro ao aplicar correções com o Biome', vim.log.levels.ERROR)
+            vim.notify(
+              "Erro ao aplicar correções com o Biome",
+              vim.log.levels.ERROR
+            )
           end
         end,
       })
     else
       -- Aplicar correções com o ESLint
       vim.lsp.buf.execute_command({
-        command = 'eslint.applyAllFixes',
+        command = "eslint.applyAllFixes",
         arguments = {
           {
             uri = vim.uri_from_bufnr(0),

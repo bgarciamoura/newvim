@@ -1,6 +1,6 @@
 return {
   "williamboman/mason.nvim",
-  priority = 1000,
+  priority = 1001,
   config = function()
     require("mason").setup({})
   end
