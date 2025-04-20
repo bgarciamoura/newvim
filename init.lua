@@ -13,3 +13,4 @@ for _, file in ipairs(vim.fn.readdir(lsp_dir, [[v:val =~ '\.lua$']])) do
 end
 
 vim.lsp.inlay_hint.enable()
+vim.cmd("colorscheme kanagawa")
