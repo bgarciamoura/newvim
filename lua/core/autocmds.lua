@@ -93,3 +93,54 @@ end, {})
 vim.api.nvim_create_user_command('DisableVirtualText', function()
   vim.diagnostic.config({ virtual_text = false })
 end, {})
+
+
+
+-------------------------------------------------------------
+--- LINT FIX COM BIOME CASO EXISTA OU ESLINT COMO FALLBACK
+-------------------------------------------------------------
+
+-- Função para determinar a raiz do projeto
+local function get_project_root()
+  local root_files = { '.git', 'package.json', 'biome.json' }
+  return vim.fs.dirname(vim.fs.find(root_files, { upward = true })[1])
+end
+
+-- Função para verificar se 'biome.json' existe na raiz do projeto
+local function has_biome_config(root)
+  return root and vim.fn.filereadable(vim.fs.joinpath(root, 'biome.json')) == 1
+end
+
+-- Autocomando para aplicar correções ao salvar arquivos
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = { '*.js', '*.jsx', '*.ts', '*.tsx', '*.vue', '*.svelte', '*.astro' },
+  callback = function()
+    local root = get_project_root()
+    if has_biome_config(root) then
+      -- Aplicar correções com o Biome
+      vim.fn.jobstart({ 'biome', 'check', '--apply', vim.api.nvim_buf_get_name(0) }, {
+        cwd = root,
+        on_exit = function(_, code)
+          if code ~= 0 then
+            vim.notify('Erro ao aplicar correções com o Biome', vim.log.levels.ERROR)
+          end
+        end,
+      })
+    else
+      -- Aplicar correções com o ESLint
+      vim.lsp.buf.execute_command({
+        command = 'eslint.applyAllFixes',
+        arguments = {
+          {
+            uri = vim.uri_from_bufnr(0),
+            version = vim.lsp.util.buf_versions[0],
+          },
+        },
+      })
+    end
+  end,
+})
+
+-------------------------------------------------------------
+--- END LINT FIX COM BIOME CASO EXISTA OU ESLINT COMO FALLBACK
+-------------------------------------------------------------
