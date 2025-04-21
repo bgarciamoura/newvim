@@ -6,6 +6,9 @@ require("core.diagnostics")
 require("core.autocmds")
 require("core.lazy")
 
+-- Adicionar adaptador de compatibilidade LSP para Neovim 0.11
+require("core.lsp-adapter").enable_lsp_compatibility()
+
 -- Carrega primeiro o arquivo de capacidades aprimoradas para garantir que todos os LSPs usem essas capacidades
 require("core.lsp-enhanced-capabilities").enhance_all_lsp_configs()
 
@@ -21,12 +24,21 @@ if handle then
 
 		if type == "file" and name:match("%.lua$") then
 			local module_name = name:sub(1, -5) -- Remove '.lua' da extensão
-			require("lsp." .. module_name)
+			local success, err = pcall(function()
+				require("lsp." .. module_name)
+			end)
+			if not success then
+				vim.notify("Erro ao carregar LSP module: " .. module_name .. " - " .. tostring(err), vim.log.levels.ERROR)
+			end
 		end
 	end
 end
 
-vim.lsp.inlay_hint.enable()
+-- Verificar se a função inlay_hint existe antes de chamá-la
+if vim.lsp.inlay_hint and type(vim.lsp.inlay_hint.enable) == "function" then
+	vim.lsp.inlay_hint.enable()
+end
+
 vim.cmd("colorscheme kanagawa")
 
 -- Configura os highlights do cmp após aplicar o tema

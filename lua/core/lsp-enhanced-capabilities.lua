@@ -1,5 +1,11 @@
 local M = {}
 
+-- Verifica se o Neovim está na versão 0.11 ou superior
+local function is_nvim_0_11_plus()
+	local major, minor = vim.version().major, vim.version().minor
+	return major > 0 or (major == 0 and minor >= 11)
+end
+
 -- Função para melhorar as capacidades do LSP para o nvim-cmp
 function M.get_capabilities()
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -41,13 +47,21 @@ end
 
 -- Função para aplicar essas capacidades a todos os LSP configurados
 function M.enhance_all_lsp_configs()
+	if not vim.lsp.config then
+		vim.lsp.config = {}
+		return
+	end
+
 	local capabilities = M.get_capabilities()
 
 	-- Aplica essas capacidades a todas as configurações LSP existentes
-	for server_name, _ in pairs(vim.lsp.config) do
+	for server_name, cfg in pairs(vim.lsp.config) do
 		if vim.lsp.config[server_name] then
-			vim.lsp.config[server_name].capabilities =
-				vim.tbl_deep_extend("force", vim.lsp.config[server_name].capabilities or {}, capabilities)
+			-- Em vez de modificar capabilities diretamente, fazemos uma cópia
+			local current_capabilities = vim.tbl_deep_extend("force", {}, vim.lsp.config[server_name].capabilities or {})
+
+			-- Mesclamos com as novas capabilities
+			vim.lsp.config[server_name].capabilities = vim.tbl_deep_extend("force", current_capabilities, capabilities)
 		end
 	end
 end
