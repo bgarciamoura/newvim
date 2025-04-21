@@ -405,6 +405,9 @@ return {
 						".gradlew",
 						"gradlew",
 						"gradlew.bat",
+						"src/main/kotlin", -- Diretório típico de código Kotlin
+						"src/main/resources/application.properties", -- Arquivo de configuração Spring Boot
+						"src/main/resources/application.yml", -- Alternativa YAML para configuração Spring Boot
 					},
 				},
 				-- Java/Spring Boot (usando JDTLS)
