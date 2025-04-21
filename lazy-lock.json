@@ -39,7 +39,7 @@
   "nvim-colorizer.lua": { "branch": "master", "commit": "a065833f35a3a7cc3ef137ac88b5381da2ba302e" },
   "nvim-lint": { "branch": "master", "commit": "d698d3b6fd7b1b85657d05a2a31d843ddb682c63" },
   "nvim-lsp-file-operations": { "branch": "master", "commit": "9744b738183a5adca0f916527922078a965515ed" },
-  "nvim-lspconfig": { "branch": "master", "commit": "343c092415668908f47d9e07d518a85a408981b9" },
+  "nvim-lspconfig": { "branch": "master", "commit": "747de98ca607615f66af5864f3eeaa2eeeb3d2da" },
   "nvim-material-icon": { "branch": "main", "commit": "399a56bfc9e68c22f1f4745856c966e0ae4cd4cb" },
   "nvim-nio": { "branch": "master", "commit": "21f5324bfac14e22ba26553caf69ec76ae8a7662" },
   "nvim-spectre": { "branch": "master", "commit": "c4abcde7b56574c2dfb7d0137b2481c5b2154372" },

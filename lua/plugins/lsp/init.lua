@@ -58,6 +58,8 @@ return {
 					"sqlls",
 					"bashls",
 					"biome",
+					"kotlin_language_server",
+					"jdtls", -- Para Java/Spring Boot
 				},
 				automatic_installation = true,
 			})
@@ -98,24 +100,21 @@ return {
 						local root = get_project_root()
 						if has_biome_config(root) then
 							-- Aplicar correções com o Biome
-							vim.fn.jobstart(
-								{
-									"biome",
-									"check",
-									"--apply",
-									"--quiet",
-									"--no-errors-on-exit",
-									"--no-format-on-error",
-									vim.api.nvim_buf_get_name(0),
-								},
-								{
-									cwd = root,
-									on_exit = function(_, _)
-										-- Ignoramos códigos de erro para não bloquear o salvamento
-										-- Simplesmente continuamos com o salvamento do arquivo
-									end,
-								}
-							)
+							vim.fn.jobstart({
+								"biome",
+								"check",
+								"--apply",
+								"--quiet",
+								"--no-errors-on-exit",
+								"--no-format-on-error",
+								vim.api.nvim_buf_get_name(0),
+							}, {
+								cwd = root,
+								on_exit = function(_, _)
+									-- Ignoramos códigos de erro para não bloquear o salvamento
+									-- Simplesmente continuamos com o salvamento do arquivo
+								end,
+							})
 						else
 							-- Aplicar correções com o ESLint
 							vim.lsp.buf.execute_command({
@@ -370,6 +369,136 @@ return {
 				},
 				-- Markdown
 				marksman = {},
+				-- Configuração do Kotlin
+				kotlin_language_server = {
+					settings = {
+						kotlin = {
+							compiler = {
+								jvm = {
+									target = "17", -- Você pode ajustar para a versão do JDK que está usando
+								},
+							},
+							completion = {
+								snippets = {
+									enabled = true,
+								},
+							},
+							debugAdapter = {
+								enabled = true,
+							},
+							externalSources = {
+								autoConvertToKotlin = true,
+								useKlsScheme = true,
+							},
+							linting = {
+								enabled = true,
+							},
+						},
+					},
+					root_markers = {
+						"settings.gradle",
+						"settings.gradle.kts",
+						"build.gradle",
+						"build.gradle.kts",
+						"pom.xml",
+						".git",
+						".gradlew",
+						"gradlew",
+						"gradlew.bat",
+					},
+				},
+				-- Java/Spring Boot (usando JDTLS)
+				jdtls = {
+					settings = {
+						java = {
+							configuration = {
+								updateBuildConfiguration = "automatic",
+								maven = {
+									downloadSources = true,
+									updateSnapshots = true,
+								},
+								gradle = {
+									downloadSources = true,
+									wrapper = {
+										enabled = true,
+									},
+								},
+							},
+							eclipse = {
+								downloadSources = true,
+							},
+							maven = {
+								downloadSources = true,
+							},
+							implementationsCodeLens = {
+								enabled = true,
+							},
+							referencesCodeLens = {
+								enabled = true,
+							},
+							format = {
+								enabled = true,
+							},
+							signatureHelp = {
+								enabled = true,
+							},
+							contentProvider = {
+								preferred = "fernflower",
+							},
+							completion = {
+								favoriteStaticMembers = {
+									"org.junit.Assert.*",
+									"org.junit.Assume.*",
+									"org.junit.jupiter.api.Assertions.*",
+									"org.junit.jupiter.api.Assumptions.*",
+									"org.junit.jupiter.api.DynamicContainer.*",
+									"org.junit.jupiter.api.DynamicTest.*",
+									"org.assertj.core.api.Assertions.*",
+									"org.mockito.Mockito.*",
+									"org.mockito.ArgumentMatchers.*",
+									"org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
+									"org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
+								},
+								importOrder = {
+									"java",
+									"javax",
+									"org",
+									"com",
+								},
+							},
+							sources = {
+								organizeImports = {
+									starThreshold = 9999,
+									staticStarThreshold = 9999,
+								},
+							},
+							codeGeneration = {
+								toString = {
+									template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
+								},
+								hashCodeEquals = {
+									useJava7Objects = true,
+								},
+								useBlocks = true,
+							},
+							inlayHints = {
+								parameterNames = {
+									enabled = "all", -- Exibir dicas de parâmetros inline
+								},
+							},
+						},
+					},
+					root_markers = {
+						".git",
+						"mvnw",
+						"gradlew",
+						"pom.xml",
+						"build.gradle",
+						"settings.gradle",
+						"build.gradle.kts",
+						"settings.gradle.kts",
+					},
+				},
 			}
 
 			-- Configuração adicional para suporte a Docker Compose
