@@ -10,6 +10,7 @@ return {
 			typescriptreact = { "biome" },
 		}
 		lint.linters.biome = {
+			name = "biome",
 			cmd = "biome",
 			args = {
 				"lint",

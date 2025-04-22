@@ -58,8 +58,6 @@ return {
 					"sqlls",
 					"bashls",
 					"biome",
-					"kotlin_language_server",
-					"jdtls", -- Para Java/Spring Boot
 				},
 				automatic_installation = true,
 			})
@@ -466,6 +464,12 @@ return {
 									"org.mockito.ArgumentMatchers.*",
 									"org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
 									"org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
+									"jakarta.servlet.http.HttpServletResponse.*",
+									"jakarta.validation.Validation.*",
+									"jakarta.validation.Validator.*",
+									"jakarta.validation.ConstraintViolation.*",
+									"jakarta.validation.ConstraintViolationException.*",
+									"jakarta.validation.constraints.*",
 								},
 								importOrder = {
 									"java",
