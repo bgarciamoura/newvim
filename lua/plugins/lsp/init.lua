@@ -395,6 +395,11 @@ return {
 							},
 						},
 					},
+					before_init = function(initialize_params, config)
+						-- Força o uso do JAVA_HOME correto no macOS
+						initialize_params.initializationOptions = initialize_params.initializationOptions or {}
+						initialize_params.initializationOptions.javaHome = vim.fn.expand("$JAVA_HOME")
+					end,
 					root_markers = {
 						"settings.gradle",
 						"settings.gradle.kts",
