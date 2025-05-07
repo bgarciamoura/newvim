@@ -275,7 +275,7 @@ return {
 				-- Biome
 				biome = {},
 				-- TypeScript/JavaScript
-				tsserver = {},
+				ts_ls = {},
 				-- ESLint
 				eslint = {
 					settings = {
@@ -530,16 +530,6 @@ return {
 				},
 			})
 
-			-- Configurar servidores LSP após Mason
-			require("mason-lspconfig").setup_handlers({
-				function(server_name)
-					local server_config = servers[server_name] or {}
-					server_config.capabilities = capabilities
-
-					require("lspconfig")[server_name].setup(server_config)
-				end,
-			})
-
 			-- Configurar diagnósticos
 			vim.diagnostic.config({
 				virtual_text = {
@@ -554,6 +544,14 @@ return {
 
 			-- Configurar integração Biome/ESLint
 			setup_biome_eslint_integration()
+
+			-- Configurar servidores LSP manualmente em vez de usar setup_handlers
+			-- Esta é a parte que estava causando o erro
+			local lspconfig = require("lspconfig")
+			for server_name, server_config in pairs(servers) do
+				server_config.capabilities = capabilities
+				lspconfig[server_name].setup(server_config)
+			end
 		end,
 	},
 }
