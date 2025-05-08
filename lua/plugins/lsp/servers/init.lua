@@ -12,7 +12,7 @@ function M.setup()
 		jsonls = require("plugins.lsp.servers.json"),
 		yamlls = require("plugins.lsp.servers.yaml"),
 		biome = require("plugins.lsp.servers.biome"),
-		tsserver = require("plugins.lsp.servers.typescript"),
+		ts_ls = require("plugins.lsp.servers.typescript"),
 		eslint = require("plugins.lsp.servers.eslint"),
 		tailwindcss = require("plugins.lsp.servers.tailwind"),
 		dockerls = require("plugins.lsp.servers.docker"),
@@ -32,11 +32,11 @@ function M.setup()
 
 		-- Configurar o servidor
 		lspconfig[server_name].setup(server_config)
-		vim.notify(
-			string.format("Servidor LSP %s configurado com sucesso!", server_name),
-			vim.log.levels.INFO,
-			{ title = "LSP Configuração" }
-		)
+		-- vim.notify(
+		-- 	string.format("Servidor LSP %s configurado com sucesso!", server_name),
+		-- 	vim.log.levels.INFO,
+		-- 	{ title = "LSP Configuração" }
+		-- )
 	end
 end
 
