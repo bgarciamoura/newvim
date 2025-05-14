@@ -6,6 +6,7 @@ require("core.diagnostics")
 require("core.autocmds")
 require("core.lazy")
 
+
 -- Anterior: Carregar capacidades LSP e busca dos arquivos .lua no diretório LSP
 -- Agora Mason + LSPConfig irá gerenciar isso, então essas linhas podem ser removidas
 
