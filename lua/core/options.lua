@@ -37,3 +37,18 @@ vim.opt.synmaxcol = 240 -- Max column for syntax highlight
 vim.opt.updatetime = 250 -- ms to wait for trigger an event
 vim.opt.lazyredraw = false -- Don't redraw while executing macros
 vim.opt.backup = false
+
+-- Configuração para clipboard usando win32yank
+vim.opt.clipboard = "unnamedplus"
+vim.g.clipboard = {
+  name = 'win32yank',
+  copy = {
+    ['+'] = 'win32yank.exe -i --crlf',
+    ['*'] = 'win32yank.exe -i --crlf',
+  },
+  paste = {
+    ['+'] = 'win32yank.exe -o --lf',
+    ['*'] = 'win32yank.exe -o --lf',
+  },
+  cache_enabled = 0,
+}
