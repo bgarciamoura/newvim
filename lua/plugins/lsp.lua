@@ -328,7 +328,6 @@ vim.lsp.config.rust_analyzer = {
 vim.lsp.enable("rust_analyzer")
 -- }}}
 
-
 -- Bash {{{
 vim.lsp.config.bashls = {
   cmd = { "bash-language-server", "start" },
@@ -440,7 +439,78 @@ vim.lsp.config.biome = {
 }
 -- }}}
 
-vim.lsp.enable({ "ts_ls", "cssls", "tailwindcssls", "htmlls", "biome" })
+-- EMMET {{{
+vim.lsp.config.emmet_language_server = {
+  cmd = { "emmet-language-server", "--stdio" },
+  root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
+  filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "pug", "typescriptreact" },
+}
+-- }}}
+
+-- DOCKERFILE {{{
+vim.lsp.config.dockerls = {
+  cmd = { 'dockerfile-language-server', '--stdio' },
+  filetypes = {'dockerfile', 'Dockerfile'},
+  root_dir = vim.fs.dirname(vim.fs.find({'Dockerfile', 'docker-compose.yml', '.git'}, { upward = true })[1]),
+  settings = {
+    dockerfile = {
+      formatter = {
+        ignoreMultilineInstructions = false,
+      },
+    },
+  }
+}
+-- }}}
+
+-- DOCKER COMPOSE {{{
+vim.lsp.config.docker_compose_ls = {
+  filetypes = {'docker-compose.yml', 'docker-compose.yaml'},
+  cmd = { 'docker-compose-language-service', '--stdio' },
+  root_dir = vim.fs.dirname(vim.fs.find({'docker-compose.yml', 'docker-compose.yaml', '.git'}, { upward = true })[1]),
+}
+-- }}}
+
+-- JSON {{{
+vim.lsp.config.jsonls = {
+  cmd = { "vscode-json-language-server", "--stdio" },
+  filetypes = { "json", "jsonc" },
+  root_markers = { ".git", "package.json" },
+  init_options = {
+    provideFormatter = true,
+  },
+  settings = {
+    json = {
+      -- Esquemas para validação de arquivos JSON específicos
+      schemas = {
+        {
+          fileMatch = {"package.json"},
+          url = "https://json.schemastore.org/package.json"
+        },
+        {
+          fileMatch = {"tsconfig.json", "tsconfig.*.json"},
+          url = "https://json.schemastore.org/tsconfig.json"
+        },
+        {
+          fileMatch = {".prettierrc", ".prettierrc.json"},
+          url = "https://json.schemastore.org/prettierrc.json"
+        },
+        {
+          fileMatch = {".eslintrc", ".eslintrc.json"},
+          url = "https://json.schemastore.org/eslintrc.json"
+        },
+        {
+          fileMatch = {"docker-compose.yml", "docker-compose.yaml"},
+          url = "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"
+        }
+      },
+      validate = { enable = true },
+      format = { enable = true }
+    }
+  },
+}
+-- }}}
+
+vim.lsp.enable({ "ts_ls", "cssls", "tailwindcssls", "htmlls", "biome", "emmet_language_server", "dockerls", "docker_compose_ls", "jsonls" })
 
 -- }}}
 
