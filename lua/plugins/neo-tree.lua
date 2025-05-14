@@ -2,7 +2,8 @@ return {
 	"nvim-neo-tree/neo-tree.nvim",
 	lazy = false,
 	dependencies = {
-		"DaikyXendo/nvim-material-icon",
+		-- "DaikyXendo/nvim-material-icon",
+		"nvim-tree/nvim-web-devicons",
 		"nvim-lua/plenary.nvim",
 		"MunifTanjim/nui.nvim",
 		"s1n7ax/nvim-window-picker",
