@@ -13,14 +13,15 @@ return {
 				"css",
 				"json",
 				"markdown",
+				"yaml",
 			},
 			highlight = { enable = true },
 			indent = { enable = true },
 			incremental_selection = {
 				enable = true,
 				keymaps = {
-					init_selection = "<C-space>",
-					node_incremental = "<C-space>",
+					init_selection = "<leader><space>",
+					node_incremental = "<leader><space>",
 					node_decremental = "<BS>",
 				},
 			},

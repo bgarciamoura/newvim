@@ -14,6 +14,10 @@ return {
 	---@module 'blink.cmp'
 	---@type blink.cmp.Config
 	opts = {
+		keymap = {
+			-- set to 'none' to disable the 'default' preset
+			preset = "enter",
+		},
 		completion = {
 			documentation = {
 				auto_show = true,
