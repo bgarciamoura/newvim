@@ -87,11 +87,19 @@ RUN git clone --filter=blob:none --depth 1 -b ${GITHUB_BRANCH} https://github.co
     if [ -f /tmp/nvim-config/.stylua.toml ]; then cp /tmp/nvim-config/.stylua.toml /root/.config/nvim/; fi && \
     rm -rf /tmp/nvim-config
 
+# Criar diretório SSH
+RUN mkdir -p /root/.ssh && \
+    chmod 700 /root/.ssh
+
+# Configuração para evitar verificação de host no SSH
+RUN echo "StrictHostKeyChecking no" > /root/.ssh/config && \
+    chmod 600 /root/.ssh/config
+
 # Configurar volumes persistentes para caches
-VOLUME ["/root/.local/share/nvim", "/root/.cache/nvim"]
+VOLUME ["/root/.local/share/nvim", "/root/.cache/nvim", "/root/.ssh"]
 WORKDIR /workspace
 VOLUME ["/workspace"]
 
 # Configurar PATH e comando padrão
-ENV PATH="/usr/local/bin:${PATH}"
+ENV PATH="/usr/local/bin:/opt/python-env/bin:${PATH}"
 ENTRYPOINT ["nvim"]
