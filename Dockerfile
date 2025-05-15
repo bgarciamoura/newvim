@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git curl ca-certificates python3 python3-venv python3-pip \
     nodejs npm ripgrep fd-find locales procps \
     libxext6 libxrender1 libxtst6 libxi6 xclip \
-    libtinfo-dev unzip build-essential \
+    libtinfo-dev unzip build-essential openssh-client \
     && npm install -g n && n lts \
     && hash -r \
     && apt-get clean \
@@ -76,7 +76,9 @@ RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygi
     curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" && \
     tar xf lazygit.tar.gz lazygit && \
     install lazygit -D -t /usr/local/bin/ && \
-    git config --global --add safe.directory /workspace
+    git config --global --add safe.directory /workspace && \
+    git config --global user.name "Bruno Garcia" && \
+    git config --global user.email "itsme@bgarciamoura.com"
 
 # Clonar e configurar o Neovim a partir do GitHub
 RUN git clone --filter=blob:none --depth 1 -b ${GITHUB_BRANCH} https://github.com/${GITHUB_REPO}.git /tmp/nvim-config && \
