@@ -1,3 +1,4 @@
+-- lua/core/autocmds.lua (versão corrigida)
 local vim = vim
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -14,7 +15,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			local autocmd = vim.api.nvim_create_autocmd
 			local augroup = vim.api.nvim_create_augroup("lsp_highlight", { clear = false })
 
-			vim.api.nvim_clear_autocmds({ buffer = bufnr, group = augroup })
+			vim.api.nvim_clear_autocmds({ buffer = args.buf, group = augroup })
 
 			autocmd({ "CursorHold" }, {
 				group = augroup,
@@ -29,29 +30,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			})
 		end
 
+		-- DESABILITAR completamente o sistema de completação nativo para evitar conflito com blink.cmp
 		if client:supports_method("textDocument/completion") then
-			-- Não precisamos configurar o sistema de completação nativo aqui, pois o nvim-cmp vai se encarregar disso
-			-- Em vez disso, garantimos que o cliente LSP tenha as capabilities necessárias
-			local has_cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-			if has_cmp_nvim_lsp then
-				-- O nvim-cmp está instalado, então ele gerenciará o autocomplete
-				client.server_capabilities.completion = client.server_capabilities.completion or {}
-				client.server_capabilities.completion.completionItem = client.server_capabilities.completion.completionItem
-					or {}
-				client.server_capabilities.completion.completionItem.snippetSupport = true
+			-- Verifica se blink.cmp está disponível
+			local has_blink = pcall(require, "blink.cmp")
+			if has_blink then
+				-- Se blink.cmp está presente, NÃO abilite o sistema nativo
+				-- O blink.cmp vai gerenciar tudo
+				vim.notify("LSP " .. client.name .. " attached - completion handled by blink.cmp", vim.log.levels.DEBUG)
 			else
-				-- Fallback para o sistema nativo caso nvim-cmp não esteja instalado
+				-- Só abilita o sistema nativo se blink.cmp não estiver presente
 				vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+				vim.notify("LSP " .. client.name .. " attached - using native completion", vim.log.levels.DEBUG)
 			end
 		end
-
-		-- Autocomplete Nativo do Neovim 0.11
-		-- if client:supports_method("textDocument/completion") then
-		--   -- Optional: trigger autocompletion on EVERY keypress. May be slow!
-		--   -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-		--   -- client.server_capabilities.completionProvider.triggerCharacters = chars
-		--   vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-		-- end
 
 		-- Auto-format ("lint") on save.
 		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".

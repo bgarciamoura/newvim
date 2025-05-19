@@ -22,6 +22,13 @@ return {
 			documentation = {
 				auto_show = true,
 			},
+			-- Configuração específica para evitar conflitos com LSP nativo
+			list = {
+				selection = {
+					preselect = true,
+					auto_insert = false, -- Desabilita auto-inserção para evitar conflitos
+				},
+			},
 		},
 		snippets = {
 			preset = "luasnip",
@@ -29,6 +36,17 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer", "lazydev", "conventional_commits", "avante", "env", "nerdfont" },
 			providers = {
+				lsp = {
+					name = "LSP",
+					module = "blink.cmp.sources.lsp",
+					fallbacks = { "buffer" },
+					-- Configurações específicas para o LSP provider
+					opts = {
+						-- Desabilita detecção automática de trigger characters
+						-- para evitar conflitos com o sistema nativo
+						auto_trigger_chars = {},
+					},
+				},
 				lazydev = {
 					name = "LazyDev",
 					module = "lazydev.integrations.blink",
@@ -76,8 +94,30 @@ return {
 				},
 			},
 		},
-		signature = { enabled = true },
+		signature = {
+			enabled = true,
+			-- Configuração para evitar conflitos
+			window = {
+				border = "rounded",
+			},
+		},
 	},
 
 	opts_extend = { "sources.default" },
+
+	-- Configuração adicional para garantir compatibilidade
+	config = function(_, opts)
+		-- Desabilita explicitamente o sistema de completação nativo do Neovim
+		vim.api.nvim_create_autocmd("LspAttach", {
+			callback = function(args)
+				local client = vim.lsp.get_client_by_id(args.data.client_id)
+				-- Remove capacidade de completação para forçar uso do blink.cmp
+				if client and client.server_capabilities then
+					client.server_capabilities.completionProvider = false
+				end
+			end,
+		})
+
+		require("blink.cmp").setup(opts)
+	end,
 }
