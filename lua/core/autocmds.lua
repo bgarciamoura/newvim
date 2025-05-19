@@ -117,23 +117,77 @@ local function has_biome_config(root)
 	return root and vim.fn.filereadable(vim.fs.joinpath(root, "biome.json")) == 1
 end
 
+-- Função para verificar se ESLint está configurado no projeto
+local function has_eslint_config(root)
+	if not root then
+		return false
+	end
+	local eslint_configs = {
+		".eslintrc.js",
+		".eslintrc.cjs",
+		".eslintrc.yaml",
+		".eslintrc.yml",
+		".eslintrc.json",
+		".eslintrc",
+		"eslint.config.js",
+		"eslint.config.cjs",
+	}
+
+	for _, config in ipairs(eslint_configs) do
+		if vim.fn.filereadable(vim.fs.joinpath(root, config)) == 1 then
+			return true
+		end
+	end
+
+	-- Também verifica se existe config no package.json
+	local package_json_path = vim.fs.joinpath(root, "package.json")
+	if vim.fn.filereadable(package_json_path) == 1 then
+		local ok, package_content = pcall(vim.fn.readfile, package_json_path)
+		if ok then
+			local package_str = table.concat(package_content, "\n")
+			local package_json = vim.fn.json_decode(package_str)
+			if package_json and package_json.eslintConfig then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+-- Função para verificar se o cliente ESLint está anexado
+local function has_eslint_lsp_client()
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	for _, client in ipairs(clients) do
+		if client.name == "eslint" then
+			return true
+		end
+	end
+	return false
+end
+
 -- Autocomando para aplicar correções ao salvar arquivos
 vim.api.nvim_create_autocmd("BufWritePre", {
 	pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.vue", "*.svelte", "*.astro" },
 	callback = function()
 		local root = get_project_root()
+
+		-- Primeiro, tenta usar o Biome se estiver configurado
 		if has_biome_config(root) then
-			-- Aplicar correções com o Biome
 			vim.fn.jobstart({ "biome", "check", "--apply", vim.api.nvim_buf_get_name(0) }, {
 				cwd = root,
 				on_exit = function(_, code)
 					if code ~= 0 then
-						vim.notify("Erro ao aplicar correções com o Biome", vim.log.levels.ERROR)
+						vim.notify("Erro ao aplicar correções com o Biome", vim.log.levels.WARN)
+					else
+						-- Recarrega o buffer para mostrar as mudanças
+						vim.cmd("edit")
 					end
 				end,
 			})
-		else
-			-- Aplicar correções com o ESLint
+		-- Depois, verifica se tem ESLint configurado E o LSP anexado
+		elseif has_eslint_config(root) and has_eslint_lsp_client() then
+			-- Usa o comando LSP do ESLint
 			vim.lsp.buf.execute_command({
 				command = "eslint.applyAllFixes",
 				arguments = {
@@ -143,6 +197,24 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 					},
 				},
 			})
+		-- Como último recurso, usa apenas o formatador LSP padrão
+		else
+			-- Usa o formatador padrão do LSP (conform.nvim já está configurado no seu projeto)
+			local conform = require("conform")
+			if conform then
+				conform.format({
+					bufnr = 0,
+					timeout_ms = 3000,
+					lsp_fallback = true,
+				})
+			else
+				-- Fallback para formatação nativa do LSP
+				vim.lsp.buf.format({
+					bufnr = 0,
+					timeout_ms = 3000,
+					async = false,
+				})
+			end
 		end
 	end,
 })
