@@ -1,4 +1,3 @@
--- lua/core/autocmds.lua (versão corrigida)
 local vim = vim
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -30,32 +29,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			})
 		end
 
-		-- DESABILITAR completamente o sistema de completação nativo para evitar conflito com blink.cmp
+		-- COMPLETAÇÃO: Deixa o LSP funcionando normalmente para funcionalidades como auto-import
+		-- O blink.cmp vai interceptar e usar as capabilities do LSP sem desabilitá-las
 		if client:supports_method("textDocument/completion") then
-			-- Verifica se blink.cmp está disponível
-			local has_blink = pcall(require, "blink.cmp")
-			if has_blink then
-				-- Se blink.cmp está presente, NÃO abilite o sistema nativo
-				-- O blink.cmp vai gerenciar tudo
-				vim.notify("LSP " .. client.name .. " attached - completion handled by blink.cmp", vim.log.levels.DEBUG)
-			else
-				-- Só abilita o sistema nativo se blink.cmp não estiver presente
-				vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-				vim.notify("LSP " .. client.name .. " attached - using native completion", vim.log.levels.DEBUG)
-			end
+			-- NÃO desabilitamos o completion provider, apenas não habilitamos o sistema nativo
+			-- O blink.cmp vai usar essas capabilities através do provider LSP
+			vim.notify("LSP " .. client.name .. " attached - completion handled by blink.cmp", vim.log.levels.DEBUG)
 		end
-
-		-- Auto-format ("lint") on save.
-		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-		-- if not client:supports_method('textDocument/willSaveWaitUntil')
-		--     and client:supports_method('textDocument/formatting') then
-		--   vim.api.nvim_create_autocmd('BufWritePre', {
-		--     buffer = args.buf,
-		--     callback = function()
-		--       vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
-		--     end,
-		--   })
-		-- end
 	end,
 })
 

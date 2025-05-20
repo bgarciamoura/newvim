@@ -15,7 +15,6 @@ return {
 	---@type blink.cmp.Config
 	opts = {
 		keymap = {
-			-- set to 'none' to disable the 'default' preset
 			preset = "enter",
 			["<C-space>"] = {
 				function(cmp)
@@ -42,7 +41,6 @@ return {
 					cmp.close()
 				end,
 			},
-
 			["<C-u>"] = {
 				function(cmp)
 					cmp.scroll_docs(-4)
@@ -58,11 +56,10 @@ return {
 			documentation = {
 				auto_show = true,
 			},
-			-- Configuração específica para evitar conflitos com LSP nativo
 			list = {
 				selection = {
 					preselect = true,
-					auto_insert = false, -- Desabilita auto-inserção para evitar conflitos
+					auto_insert = false,
 				},
 			},
 		},
@@ -76,17 +73,13 @@ return {
 					name = "LSP",
 					module = "blink.cmp.sources.lsp",
 					fallbacks = { "buffer" },
-					-- Configurações específicas para o LSP provider
-					opts = {
-						-- Desabilita detecção automática de trigger characters
-						-- para evitar conflitos com o sistema nativo
-						auto_trigger_chars = {},
-					},
+					-- Mantém as configurações padrão para funcionalidades como auto-import
+					opts = {},
 				},
 				lazydev = {
 					name = "LazyDev",
 					module = "lazydev.integrations.blink",
-					score_offset = 100, -- make lazydev completions top priority (see `:h blink.cmp`)
+					score_offset = 100,
 				},
 				conventional_commits = {
 					name = "Conventional Commits",
@@ -94,16 +87,12 @@ return {
 					enabled = function()
 						return vim.bo.filetype == "gitcommit"
 					end,
-					---@module 'blink-cmp-conventional-commits'
-					---@type blink-cmp-conventional-commits.Options
-					opts = {}, -- none so far
+					opts = {},
 				},
 				avante = {
 					module = "blink-cmp-avante",
 					name = "Avante",
-					opts = {
-						-- options for blink-cmp-avante
-					},
+					opts = {},
 				},
 				env = {
 					name = "Env",
@@ -117,22 +106,19 @@ return {
 					name = "css-vars",
 					module = "css-vars.blink",
 					opts = {
-						-- WARNING: The search is not optimized to look for variables in JS files.
-						-- If you change the search_extensions you might get false positives and weird completion results.
 						search_extensions = { ".js", ".ts", ".jsx", ".tsx" },
 					},
 				},
 				nerdfont = {
 					module = "blink-nerdfont",
 					name = "Nerd Fonts",
-					score_offset = 15, -- Tune by preference
-					opts = { insert = true }, -- Insert nerdfont icon (default) or complete its name
+					score_offset = 15,
+					opts = { insert = true },
 				},
 			},
 		},
 		signature = {
 			enabled = true,
-			-- Configuração para evitar conflitos
 			window = {
 				border = "rounded",
 			},
@@ -141,19 +127,8 @@ return {
 
 	opts_extend = { "sources.default" },
 
-	-- Configuração adicional para garantir compatibilidade
+	-- Configuração mais sutil para evitar conflitos SEM quebrar funcionalidades
 	config = function(_, opts)
-		-- Desabilita explicitamente o sistema de completação nativo do Neovim
-		vim.api.nvim_create_autocmd("LspAttach", {
-			callback = function(args)
-				local client = vim.lsp.get_client_by_id(args.data.client_id)
-				-- Remove capacidade de completação para forçar uso do blink.cmp
-				if client and client.server_capabilities then
-					client.server_capabilities.completionProvider = false
-				end
-			end,
-		})
-
 		require("blink.cmp").setup(opts)
 	end,
 }

@@ -1,6 +1,5 @@
-local vim = vim
-
 return {
+	event = "LspAttach", -- Será aplicado quando um LSP se conectar
 	mappings = {
 		-- Atalhos adicionais / overrides (os que você realmente precisa customizar)
 		{ "n", "gd", vim.lsp.buf.definition, "Go to definition" },
@@ -19,14 +18,76 @@ return {
 			"i",
 			"<C-Space>",
 			function()
-				vim.lsp.completion.get()
+				-- Não precisamos mais disso com blink.cmp
+				-- vim.lsp.completion.get()
 			end,
-			"Abre a janela de autocomplete",
+			"Completação já gerenciada pelo blink.cmp",
+		},
+
+		-- ===== CODE ACTIONS =====
+		{
+			"n",
+			"<leader>ca",
+			vim.lsp.buf.code_action,
+			"Code Actions",
+		},
+		{
+			"v",
+			"<leader>ca",
+			vim.lsp.buf.code_action,
+			"Code Actions (Visual)",
+		},
+
+		-- ===== RENAME =====
+		{
+			"n",
+			"<leader>rn",
+			vim.lsp.buf.rename,
+			"Rename Symbol",
+		},
+
+		-- ===== ORGANIZE IMPORTS (para TypeScript) =====
+		{
+			"n",
+			"<leader>oi",
+			function()
+				vim.lsp.buf.execute_command({
+					command = "typescript.organizeImports",
+					arguments = { vim.uri_from_bufnr(0) },
+				})
+			end,
+			"Organize Imports (TypeScript)",
+		},
+
+		-- ===== REMOVE UNUSED IMPORTS (para TypeScript) =====
+		{
+			"n",
+			"<leader>ru",
+			function()
+				vim.lsp.buf.execute_command({
+					command = "typescript.removeUnused",
+					arguments = { vim.uri_from_bufnr(0) },
+				})
+			end,
+			"Remove Unused Imports (TypeScript)",
+		},
+
+		-- ===== ADD MISSING IMPORTS (para TypeScript) =====
+		{
+			"n",
+			"<leader>ai",
+			function()
+				vim.lsp.buf.execute_command({
+					command = "typescript.addMissingImports",
+					arguments = { vim.uri_from_bufnr(0) },
+				})
+			end,
+			"Add Missing Imports (TypeScript)",
 		},
 	},
 
 	-------------------------------------------------------------------------------
-	-- Os keymaps abaixo já são criados automaticamente pelo Neovim 0.12          --
+	-- Os keymaps abaixo já são criados automaticamente pelo Neovim 0.12          --
 	-- quando um LSP é anexado. Mantidos aqui apenas como referência/documentação. --
 	-------------------------------------------------------------------------------
 	-- { "n", "grn", vim.lsp.buf.rename,            { desc = "Rename symbol" } },
