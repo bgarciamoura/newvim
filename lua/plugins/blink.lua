@@ -115,6 +115,15 @@ return {
 					score_offset = 15,
 					opts = { insert = true },
 				},
+				snippets = {
+					name = "Snippets",
+					module = "blink.cmp.sources.snippets",
+					opts = {
+						search_paths = {
+							vim.fn.stdpath("config") .. "/snippets",
+						},
+					},
+				},
 			},
 		},
 		signature = {
@@ -130,5 +139,17 @@ return {
 	-- Configuração mais sutil para evitar conflitos SEM quebrar funcionalidades
 	config = function(_, opts)
 		require("blink.cmp").setup(opts)
+
+		-- Carrega os snippets via LuaSnip
+		local luasnip_status, luasnip = pcall(require, "luasnip")
+		if luasnip_status then
+			-- Carrega snippets amigáveis
+			require("luasnip.loaders.from_vscode").lazy_load()
+
+			-- Carrega snippets personalizados
+			require("luasnip.loaders.from_vscode").lazy_load({
+				paths = { vim.fn.stdpath("config") .. "/snippets" },
+			})
+		end
 	end,
 }

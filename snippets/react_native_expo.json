@@ -34,7 +34,6 @@
       "rnfc"
     ],
     "body": [
-      "import React from 'react';",
       "import { ${2:View} } from 'react-native';",
       "",
       "const ${1:ComponentName} = (${3:props}) => {",

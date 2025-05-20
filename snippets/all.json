@@ -1,1 +1,33 @@
-{}
+{
+  "Console Log": {
+    "prefix": [
+      "clg",
+      "log"
+    ],
+    "body": [
+      "console.log('${1:label}:', ${2:variable});"
+    ],
+    "description": "Console log with label"
+  },
+  "Function": {
+    "prefix": [
+      "fn",
+      "func"
+    ],
+    "body": [
+      "function ${1:name}(${2:params}) {",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Create a function"
+  },
+  "TODO Comment": {
+    "prefix": [
+      "todo"
+    ],
+    "body": [
+      "// TODO: ${1:description}"
+    ],
+    "description": "Add a TODO comment"
+  }
+}
