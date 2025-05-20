@@ -1,0 +1,233 @@
+{
+  "Import React and Components": {
+    "prefix": [
+      "imrn",
+      "imreactnative"
+    ],
+    "body": [
+      "import React from 'react';",
+      "import { ${1:View}, ${2:Text}, ${3:StyleSheet}, ${4:Platform} } from 'react-native';"
+    ],
+    "description": "Import basic React and React Native components"
+  },
+  "React Native StyleSheet Create": {
+    "prefix": [
+      "rnstyle",
+      "stylesheet"
+    ],
+    "body": [
+      "const styles = StyleSheet.create({",
+      "\t${1:container}: {",
+      "\t\t${2:flex}: ${3:1},",
+      "\t\t${4:backgroundColor}: '${5:#fff}',",
+      "\t\t${6:alignItems}: '${7:center}',",
+      "\t\t${8:justifyContent}: '${9:center}',",
+      "\t},",
+      "\t${10}",
+      "});"
+    ],
+    "description": "Create React Native StyleSheet object"
+  },
+  "Functional Component (Arrow)": {
+    "prefix": [
+      "rfc",
+      "rnfc"
+    ],
+    "body": [
+      "import React from 'react';",
+      "import { ${2:View} } from 'react-native';",
+      "",
+      "const ${1:ComponentName} = (${3:props}) => {",
+      "\treturn (",
+      "\t\t<$2:View>",
+      "\t\t\t${4}",
+      "\t\t</$2:View>",
+      "\t);",
+      "};",
+      "",
+      "export default ${1:ComponentName};"
+    ],
+    "description": "React Native Functional Component (Arrow Function)"
+  },
+  "Functional Component (Declaration)": {
+    "prefix": [
+      "rfd",
+      "rnfd"
+    ],
+    "body": [
+      "import React from 'react';",
+      "import { ${2:View} } from 'react-native';",
+      "",
+      "function ${1:ComponentName}(${3:props}) {",
+      "\treturn (",
+      "\t\t<$2:View>",
+      "\t\t\t${4}",
+      "\t\t</$2:View>",
+      "\t);",
+      "}",
+      "",
+      "export default ${1:ComponentName};"
+    ],
+    "description": "React Native Functional Component (Function Declaration)"
+  },
+  "useState Hook": {
+    "prefix": [
+      "usf",
+      "useState"
+    ],
+    "body": [
+      "const [${1:state}, ${2:setState}] = useState(${3:initialValue});"
+    ],
+    "description": "useState Hook"
+  },
+  "useEffect Hook": {
+    "prefix": [
+      "uef",
+      "useEffect"
+    ],
+    "body": [
+      "useEffect(() => {",
+      "\t${1:// effect}",
+      "\treturn () => {",
+      "\t\t${2:// cleanup}",
+      "\t}",
+      "}, [${3:dependencies}]);"
+    ],
+    "description": "useEffect Hook"
+  },
+  "useCallback Hook": {
+    "prefix": [
+      "ucb",
+      "useCallback"
+    ],
+    "body": [
+      "useCallback((${1:args}) => {",
+      "\t${2:// body}",
+      "}, [${3:dependencies}]);"
+    ],
+    "description": "useCallback Hook"
+  },
+  "useMemo Hook": {
+    "prefix": [
+      "umo",
+      "useMemo"
+    ],
+    "body": [
+      "useMemo(() => ${1:value}, [${2:dependencies}]);"
+    ],
+    "description": "useMemo Hook"
+  },
+  "useRef Hook": {
+    "prefix": [
+      "urf",
+      "useRef"
+    ],
+    "body": [
+      "const ${1:refName} = useRef(${2:initialValue});"
+    ],
+    "description": "useRef Hook"
+  },
+  "JSX Fragment": {
+    "prefix": [
+      "frag",
+      "fragment"
+    ],
+    "body": [
+      "<>",
+      "\t${1}",
+      "</>"
+    ],
+    "description": "JSX Fragment"
+  },
+  "Console Log": {
+    "prefix": [
+      "clg",
+      "log"
+    ],
+    "body": [
+      "console.log('${1:message}', ${2:variable});"
+    ],
+    "description": "Console log"
+  },
+  "Platform Select": {
+    "prefix": [
+      "pselect",
+      "platformselect"
+    ],
+    "body": [
+      "Platform.select({",
+      "\tios: ${1:iosValue},",
+      "\tandroid: ${2:androidValue},",
+      "\tdefault: ${3:defaultValue}",
+      "})"
+    ],
+    "description": "Platform.select helper"
+  },
+  "Expo useFonts Hook": {
+    "prefix": [
+      "usefonts",
+      "expofonts"
+    ],
+    "body": [
+      "import { useFonts } from 'expo-font';",
+      "import * as SplashScreen from 'expo-splash-screen';",
+      "",
+      "// Keep the splash screen visible while we fetch resources",
+      "SplashScreen.preventAutoHideAsync();",
+      "",
+      "let [fontsLoaded] = useFonts({",
+      "\t${1:'SpaceMono'}: require('./assets/fonts/SpaceMono.ttf'),",
+      "\t${2}",
+      "});",
+      "",
+      "useEffect(() => {",
+      "\tif (fontsLoaded) {",
+      "\t\tSplashScreen.hideAsync();",
+      "\t}",
+      "}, [fontsLoaded]);",
+      "",
+      "if (!fontsLoaded) {",
+      "\treturn null; // Or a loading component",
+      "}"
+    ],
+    "description": "Expo useFonts hook (with SplashScreen)"
+  },
+  "Basic Expo App Structure": {
+    "prefix": [
+      "expoapp",
+      "basicapp"
+    ],
+    "body": [
+      "import React from 'react';",
+      "import { StyleSheet, Text, View } from 'react-native';",
+      "// import { useFonts } from 'expo-font';",
+      "// import * as SplashScreen from 'expo-splash-screen';",
+      "",
+      "// SplashScreen.preventAutoHideAsync();",
+      "",
+      "export default function App() {",
+      "\t// let [fontsLoaded] = useFonts({...});",
+      "   // useEffect(() => { ... }, [fontsLoaded]);",
+      "   // if (!fontsLoaded) { return null; }",
+      "",
+      "\treturn (",
+      "\t\t<View style={styles.container}>",
+      "\t\t\t<Text>Open up App.js to start working on your app!</Text>",
+      "\t\t\t${1}",
+      "\t\t</View>",
+      "\t);",
+      "}",
+      "",
+      "const styles = StyleSheet.create({",
+      "\tcontainer: {",
+      "\t\tflex: 1,",
+      "\t\tbackgroundColor: '#fff',",
+      "\t\talignItems: 'center',",
+      "\t\tjustifyContent: 'center',",
+      "\t},",
+      "\t${2}",
+      "});"
+    ],
+    "description": "Basic Expo App Structure"
+  }
+}
