@@ -34,7 +34,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		if client:supports_method("textDocument/completion") then
 			-- NÃO desabilitamos o completion provider, apenas não habilitamos o sistema nativo
 			-- O blink.cmp vai usar essas capabilities através do provider LSP
-			vim.notify("LSP " .. client.name .. " attached - completion handled by blink.cmp", vim.log.levels.DEBUG)
+			-- vim.notify("LSP " .. client.name .. " attached - completion handled by blink.cmp", vim.log.levels.DEBUG)
 		end
 	end,
 })
