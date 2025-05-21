@@ -116,6 +116,7 @@ return {
 						"Thumbs.db",
 					},
 					always_show = { -- Sempre mostrar, mesmo se 'visible' for false
+						".storybook",
 						".gitignore",
 						".env.*",
 						".env",
