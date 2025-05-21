@@ -115,6 +115,15 @@ return {
 						".DS_Store",
 						"Thumbs.db",
 					},
+					always_show = { -- Sempre mostrar, mesmo se 'visible' for false
+						".gitignore",
+						".env.*",
+						".env",
+						".husky",
+						".prettierignore",
+						".prettierrc",
+						".editorconfig",
+					},
 				},
 				follow_current_file = {
 					enabled = true, -- Fazer o Neo-tree seguir o arquivo ativo no buffer
