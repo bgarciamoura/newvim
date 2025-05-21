@@ -5,8 +5,8 @@ function M.setup_debug_commands()
 	vim.api.nvim_create_user_command("BLinkDebugCompletion", function()
 		local clients = vim.lsp.get_clients({ bufnr = 0 })
 		for _, client in ipairs(clients) do
-			print("Client:", client.name)
-			print("Completion provider:", vim.inspect(client.server_capabilities.completionProvider))
+			-- print("Client:", client.name)
+			-- print("Completion provider:", vim.inspect(client.server_capabilities.completionProvider))
 		end
 	end, { desc = "Debug completion setup for current buffer" })
 end
