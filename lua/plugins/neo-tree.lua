@@ -100,7 +100,7 @@ return {
 			-- === Comportamento do Filesystem ===
 			filesystem = {
 				filtered_items = {
-					visible = true,
+					visible = false,
 					hide_dotfiles = true,
 					hide_gitignored = true, -- Esconder arquivos/pastas do .gitignore
 					hide_hidden = true, -- Esconder arquivos ocultos (funciona melhor no Windows)
