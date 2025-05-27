@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "Lua.runtime.version": "LuaJIT",
+  "Lua.workspace.library": [
+    "${3rd}/luv/library"
+  ],
+  "Lua.workspace.maxPreload": 100,
+  "Lua.workspace.preloadFileSize": 500,
+  "Lua.workspace.ignoreDir": [
+    ".git",
+    ".lazy",
+    "lua/plugins"
+  ],
+  "Lua.workspace.ignoreSubmodules": true,
+  "Lua.diagnostics.workspaceDelay": 5000,
+  "Lua.diagnostics.workspaceRate": 10,
+  "Lua.diagnostics.globals": [
+    "vim"
+  ],
+  "Lua.telemetry.enable": false,
+  "Lua.hint.enable": false,
+  "Lua.completion.workspaceWord": false
+}

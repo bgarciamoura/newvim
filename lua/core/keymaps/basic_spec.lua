@@ -5,5 +5,12 @@ return {
 		{ "n", "<C-q>", "<Cmd>q<CR>", "Sair" },
 		{ "n", "ZZ", "<Cmd>x<CR>", "Salvar e sair" },
 		{ "n", "<C-C>", "<Cmd>let @/ = ''<CR>", "Limpar padrão de busca", { nowait = true } },
+		{
+			"n",
+			"<C-/>",
+			"<Cmd>:g/^s*//.*$/d | g/^s*#.*$/d | g/^s*;.*$/d
+<CR>",
+			"Apaga todos os comentários e deixa o código",
+		},
 	},
 }

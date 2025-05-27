@@ -148,6 +148,6 @@ return {
 		vim.keymap.set("n", "<Leader>e", "<Cmd>Neotree toggle reveal<CR>", { desc = "Neo-tree: Toggle/Reveal" })
 		vim.keymap.set("n", "<Leader>fe", "<Cmd>Neotree filesystem focus<CR>", { desc = "Neo-tree: Focus Filesystem" })
 		vim.keymap.set("n", "<Leader>fb", "<Cmd>Neotree buffers focus<CR>", { desc = "Neo-tree: Focus Buffers" })
-		vim.keymap.set("n", "<Leader>fg", "<Cmd>Neotree git_status focus<CR>", { desc = "Neo-tree: Focus Git Status" })
+		-- vim.keymap.set("n", "<Leader>fg", "<Cmd>Neotree git_status focus<CR>", { desc = "Neo-tree: Focus Git Status" })
 	end,
 }
