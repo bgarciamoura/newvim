@@ -22,7 +22,7 @@ return {
 			"n",
 			"<leader>cl",
 			"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-			esc = "LSP Definitions / references / ... (Trouble)",
+			"LSP Definitions / references / ... (Trouble)",
 		},
 		{
 			"n",
