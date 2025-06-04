@@ -1,3 +1,9 @@
+local total_linhas = vim.o.lines
+local altura_em_linhas = math.floor(total_linhas * 0.25)
+local function has_min_width(min_cols)
+	return vim.o.columns >= min_cols
+end
+
 return {
 	"folke/snacks.nvim",
 	priority = 1000,
@@ -10,6 +16,13 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
+			layout = {
+				align = "center",
+				width = 0.9, -- 90% da largura do Neovim
+				height = 0.9, -- 90% da altura do Neovim
+				min_width = 40, -- nunca menor que 40 colunas
+				min_height = 15, -- nunca menor que 15 linhas
+			},
 			preset = {
 				keys = {
 					{ desc = "Last Session", icon = " ", action = ":SessionRestore ", key = "s" },
@@ -33,9 +46,13 @@ return {
 				{
 					section = "terminal",
 					cmd = "pokemon-colorscripts -n charizard --no-title; sleep .1",
-					random = 10,
 					pane = 1,
-					height = 30,
+					indent = 0,
+					padding = { 0, 0 },
+					enabled = function()
+						return has_min_width(100)
+					end,
+					height = math.floor(vim.o.lines * 0.40),
 				},
 				{ section = "header", pane = 2 },
 				{ section = "keys", gap = 1, padding = 1, pane = 2 },
@@ -49,7 +66,7 @@ return {
 						return Snacks.git.get_root() ~= nil
 					end,
 					cmd = "git status --short --branch --renames",
-					height = 5,
+					height = math.floor(vim.o.lines * 0.25),
 					padding = 1,
 					ttl = 5 * 60,
 					indent = 3,
@@ -59,10 +76,13 @@ return {
 				{
 					section = "terminal",
 					cmd = "pokemon-colorscripts -n blastoise --no-title; sleep .1",
-					random = 10,
 					pane = 3,
-					indent = 4,
-					height = 30,
+					indent = 0,
+					padding = { 0, 0 },
+					enabled = function()
+						return has_min_width(100)
+					end,
+					height = math.floor(vim.o.lines * 0.40),
 				},
 			},
 		},

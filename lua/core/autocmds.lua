@@ -202,3 +202,92 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -------------------------------------------------------------
 --- END LINT FIX COM BIOME CASO EXISTA OU ESLINT COMO FALLBACK
 -------------------------------------------------------------
+
+-- Função para remover todos os comentários do buffer atual
+local function remove_all_comments()
+	local ts_utils = require("nvim-treesitter.ts_utils")
+	local parsers = require("nvim-treesitter.parsers")
+
+	-- Verifica se o treesitter está disponível para o buffer atual
+	local parser = parsers.get_parser()
+	if not parser then
+		vim.notify("Treesitter parser não disponível para este tipo de arquivo", vim.log.levels.WARN)
+		return
+	end
+
+	local tree = parser:parse()[1]
+	local root = tree:root()
+	local query = vim.treesitter.query.parse(parser:lang(), "(comment) @comment")
+
+	local comments = {}
+
+	-- Coleta todos os nós de comentário
+	for id, node in query:iter_captures(root, 0) do
+		local name = query.captures[id]
+		if name == "comment" then
+			local start_row, start_col, end_row, end_col = node:range()
+			table.insert(comments, {
+				start_row = start_row,
+				start_col = start_col,
+				end_row = end_row,
+				end_col = end_col,
+			})
+		end
+	end
+
+	-- Ordena os comentários por posição (do final para o início para não afetar as posições)
+	table.sort(comments, function(a, b)
+		if a.start_row == b.start_row then
+			return a.start_col > b.start_col
+		end
+		return a.start_row > b.start_row
+	end)
+
+	-- Remove os comentários
+	local removed_count = 0
+	for _, comment in ipairs(comments) do
+		local lines = vim.api.nvim_buf_get_lines(0, comment.start_row, comment.end_row + 1, false)
+
+		if #lines == 1 then
+			-- Comentário em uma única linha
+			local line = lines[1]
+			local before = line:sub(1, comment.start_col)
+			local after = line:sub(comment.end_col + 1)
+			local new_line = before .. after
+
+			-- Se a linha ficar vazia (só whitespace), remove a linha inteira
+			if new_line:match("^%s*$") then
+				vim.api.nvim_buf_set_lines(0, comment.start_row, comment.end_row + 1, false, {})
+			else
+				vim.api.nvim_buf_set_lines(0, comment.start_row, comment.end_row + 1, false, { new_line })
+			end
+		else
+			-- Comentário em múltiplas linhas
+			local first_line = lines[1]:sub(1, comment.start_col)
+			local last_line = lines[#lines]:sub(comment.end_col + 1)
+			local new_line = first_line .. last_line
+
+			-- Se a linha resultante ficar vazia, remove completamente
+			if new_line:match("^%s*$") then
+				vim.api.nvim_buf_set_lines(0, comment.start_row, comment.end_row + 1, false, {})
+			else
+				vim.api.nvim_buf_set_lines(0, comment.start_row, comment.end_row + 1, false, { new_line })
+			end
+		end
+
+		removed_count = removed_count + 1
+	end
+
+	vim.notify(string.format("Removidos %d comentário(s)", removed_count), vim.log.levels.INFO)
+end
+
+-- Cria o comando
+vim.api.nvim_create_user_command("RemoveComments", remove_all_comments, {
+	desc = "Remove todos os comentários do buffer atual usando treesitter",
+})
+
+-- Opcionalmente, cria um mapeamento de tecla
+vim.keymap.set("n", "<leader>rc", remove_all_comments, {
+	desc = "Remove todos os comentários",
+	silent = true,
+})
