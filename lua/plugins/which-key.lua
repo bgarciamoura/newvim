@@ -5,6 +5,7 @@ return {
         local wk = require("which-key")
         wk.setup(opts or {})
 
+        -- Register keymap groups automatically from core specs
         local specs = require("core.keymaps.engine").get_specs()
         local registrations = {}
         for _, spec in ipairs(specs) do
@@ -13,6 +14,7 @@ return {
             end
         end
 
-        wk.register(registrations)
+        -- Use the new which-key v2 format for groups
+        wk.register(registrations, { mode = "n" })
     end,
 }
