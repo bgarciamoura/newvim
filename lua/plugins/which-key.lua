@@ -19,7 +19,10 @@ return {
         -- register the groups using the new which-key spec
         local registrations = {}
         for prefix, names in pairs(groups) do
-            table.insert(registrations, { prefix, group = table.concat(names, ", ") })
+            table.insert(registrations, {
+                prefix = prefix,
+                group = table.concat(names, ", "),
+            })
         end
 
         wk.register(registrations)
