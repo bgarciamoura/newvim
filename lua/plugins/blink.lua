@@ -108,9 +108,9 @@ return {
                         score_offset = 15,
                         opts = { insert = true },
                     },
-                    luasnip = {
-                        name = "LuaSnip",
-                        module = "blink.cmp.sources.luasnip",
+                    snippets = {
+                        name = "Snippets",
+                        module = "blink.cmp.sources.snippets",
                     },
                 },
             },
