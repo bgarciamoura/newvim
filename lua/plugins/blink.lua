@@ -66,7 +66,7 @@ return {
                 preset = "luasnip",
             },
             sources = {
-                default = { "lsp", "path", "snippets", "buffer", "conventional_commits", "avante", "env", "nerdfont" },
+                default = { "lsp", "path", "luasnip", "buffer", "conventional_commits", "avante", "env", "nerdfont" },
                 providers = {
                     lsp = {
                         name = "LSP",
@@ -108,14 +108,9 @@ return {
                         score_offset = 15,
                         opts = { insert = true },
                     },
-                    snippets = {
-                        name = "Snippets",
-                        module = "blink.cmp.sources.snippets",
-                        opts = {
-                            search_paths = {
-                                vim.fn.stdpath("config") .. "/snippets",
-                            },
-                        },
+                    luasnip = {
+                        name = "LuaSnip",
+                        module = "blink.cmp.sources.luasnip",
                     },
                 },
             },
@@ -125,7 +120,6 @@ return {
                     border = "rounded",
                 },
             },
-            opts_extend = { "sources.default" },
         })
 
         local luasnip_status, _ = pcall(require, "luasnip")
