@@ -1,0 +1,59 @@
+{
+  "Import React": {
+    "prefix": ["imr", "importreact"],
+    "body": ["import React from 'react';"],
+    "description": "Import React"
+  },
+  "Functional Component (Arrow)": {
+    "prefix": ["rfcweb"],
+    "body": [
+      "const ${1:ComponentName} = (${2:props}) => {",
+      "\treturn (",
+      "\t\t<div>",
+      "\t\t\t${3}",
+      "\t\t</div>",
+      "\t);",
+      "};",
+      "",
+      "export default ${1:ComponentName};"
+    ],
+    "description": "ReactJS Functional Component (Arrow Function)"
+  },
+  "Functional Component (Declaration)": {
+    "prefix": ["rfdweb"],
+    "body": [
+      "function ${1:ComponentName}(${2:props}) {",
+      "\treturn (",
+      "\t\t<div>",
+      "\t\t\t${3}",
+      "\t\t</div>",
+      "\t);",
+      "}",
+      "",
+      "export default ${1:ComponentName};"
+    ],
+    "description": "ReactJS Functional Component (Function Declaration)"
+  },
+  "useState Hook": {
+    "prefix": ["usweb"],
+    "body": ["const [${1:state}, ${2:setState}] = useState(${3:initialValue});"],
+    "description": "useState Hook"
+  },
+  "useEffect Hook": {
+    "prefix": ["ueweb"],
+    "body": [
+      "useEffect(() => {",
+      "\t${1:// effect}",
+      "\treturn () => {",
+      "\t\t${2:// cleanup}",
+      "\t}",
+      "}, [${3:dependencies}]);"
+    ],
+    "description": "useEffect Hook"
+  },
+  "useContext Hook": {
+    "prefix": ["uctx"],
+    "body": ["const ${1:context} = useContext(${2:Context});"],
+    "description": "useContext Hook"
+  }
+}
