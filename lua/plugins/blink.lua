@@ -111,11 +111,6 @@ return {
                     snippets = {
                         name = "Snippets",
                         module = "blink.cmp.sources.snippets",
-                        opts = {
-                            search_paths = {
-                                vim.fn.stdpath("config") .. "/snippets",
-                            },
-                        },
                     },
                 },
             },
@@ -125,7 +120,6 @@ return {
                     border = "rounded",
                 },
             },
-            opts_extend = { "sources.default" },
         })
 
         local luasnip_status, _ = pcall(require, "luasnip")
