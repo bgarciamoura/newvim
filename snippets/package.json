@@ -7,6 +7,13 @@
           "javascriptreact",
           "typescriptreact"
         ],
+        "path": "./reactjs.json"
+      },
+      {
+        "language": [
+          "javascriptreact",
+          "typescriptreact"
+        ],
         "path": "./react_native_expo.json"
       },
       {
