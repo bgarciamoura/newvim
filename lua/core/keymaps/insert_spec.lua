@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Insert",
+        group_prefix = "<leader>i",
+        mappings = {
 		{ "i", "<C-h>", "<Left>", "Mover cursor para esquerda" },
 		{ "i", "<C-l>", "<Right>", "Mover cursor para direita" },
 		{ "i", "<C-j>", "<Down>", "Mover cursor para baixo" },

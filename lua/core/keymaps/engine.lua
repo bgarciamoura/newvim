@@ -44,6 +44,10 @@ local function normalize(ev)
 	return { event = ev }
 end
 
+function M.get_specs()
+    return specs
+end
+
 function M.setup()
 	for _, spec in ipairs(specs) do
 		if spec.event then

@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Visual",
+        group_prefix = "<leader>v",
+        mappings = {
 		-- Desindentar/indentar mantendo seleção
 		{ "v", "<", "<gv", "Des‑indentar e manter seleção" },
 		{ "v", ">", ">gv", "Indentar e manter seleção" },

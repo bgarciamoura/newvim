@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Basics",
+        group_prefix = "<leader>b",
+        mappings = {
 		{ "n", "<C-a>", "<Cmd>keepjumps normal! ggVG<CR>", "Selecionar todo o texto" },
 		{ "n", "<C-s>", "<Cmd>w<CR>", "Salvar arquivo" },
 		{ "n", "<C-q>", "<Cmd>q<CR>", "Sair" },

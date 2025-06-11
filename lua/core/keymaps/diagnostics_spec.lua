@@ -28,7 +28,9 @@ end
 
 -- Mapeia a tecla <leader>d para alternar diagnósticos
 return {
-	mappings = {
+        group_name = "Diagnostics",
+        group_prefix = "<leader>d",
+        mappings = {
 		{
 			"n",
 			"<leader>d",
