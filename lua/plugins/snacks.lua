@@ -48,7 +48,7 @@ return {
 				{
 					section = "terminal",
 					cmd = "pokemon-colorscripts -n charizard --no-title; sleep .1",
-					pane = 1,
+                                       pane = 3,
 					indent = 0,
 					padding = { 0, 0 },
 					enabled = function()
