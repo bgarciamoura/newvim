@@ -1,5 +1,7 @@
-local total_linhas = vim.o.lines
-local altura_em_linhas = math.floor(total_linhas * 0.25)
+-- Utilidade para calcular porcentagem de linhas/colunas
+local function pct(val, total)
+	return math.floor(total * val)
+end
 local function has_min_width(min_cols)
 	return vim.o.columns >= min_cols
 end
@@ -18,8 +20,8 @@ return {
 			enabled = true,
 			layout = {
 				align = "center",
-				width = 0.9, -- 90% da largura do Neovim
-				height = 0.9, -- 90% da altura do Neovim
+				width = 0.8, -- 80% da largura do Neovim
+				height = 0.8, -- 80% da altura do Neovim
 				min_width = 40, -- nunca menor que 40 colunas
 				min_height = 15, -- nunca menor que 15 linhas
 			},
@@ -52,7 +54,7 @@ return {
 					enabled = function()
 						return has_min_width(100)
 					end,
-					height = math.floor(vim.o.lines * 0.40),
+					height = pct(0.40, vim.o.lines),
 				},
 				{ section = "header", pane = 2 },
 				{ section = "keys", gap = 1, padding = 1, pane = 2 },
@@ -66,7 +68,7 @@ return {
 						return Snacks.git.get_root() ~= nil
 					end,
 					cmd = "git status --short --branch --renames",
-					height = math.floor(vim.o.lines * 0.25),
+					height = pct(0.25, vim.o.lines),
 					padding = 1,
 					ttl = 5 * 60,
 					indent = 3,
@@ -82,7 +84,7 @@ return {
 					enabled = function()
 						return has_min_width(100)
 					end,
-					height = math.floor(vim.o.lines * 0.40),
+					height = pct(0.40, vim.o.lines),
 				},
 			},
 		},
