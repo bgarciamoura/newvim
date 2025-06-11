@@ -18,13 +18,13 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
-			layout = {
-				align = "center",
-				width = 0.8, -- 80% da largura do Neovim
-				height = 0.8, -- 80% da altura do Neovim
-				min_width = 40, -- nunca menor que 40 colunas
-				min_height = 15, -- nunca menor que 15 linhas
-			},
+                        layout = {
+                                align = "center",
+                                width = 0.75,
+                                height = 0.85,
+                                min_width = 40,
+                                min_height = 15,
+                        },
 			preset = {
 				keys = {
 					{ desc = "Last Session", icon = " ", action = ":SessionRestore ", key = "s" },
@@ -75,17 +75,6 @@ return {
 				},
 				{ icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1, pane = 2 },
 				{ section = "startup", pane = 2 },
-				{
-					section = "terminal",
-					cmd = "pokemon-colorscripts -n blastoise --no-title; sleep .1",
-					pane = 3,
-					indent = 0,
-					padding = { 0, 0 },
-					enabled = function()
-						return has_min_width(100)
-					end,
-					height = pct(0.40, vim.o.lines),
-				},
 			},
 		},
 		debug = { enabled = true },
