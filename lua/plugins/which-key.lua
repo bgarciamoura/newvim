@@ -20,11 +20,12 @@ return {
         local registrations = {}
         for prefix, names in pairs(groups) do
             table.insert(registrations, {
-                prefix = prefix,
+                prefix,
                 group = table.concat(names, ", "),
             })
         end
 
-        wk.register(registrations)
+        -- `wk.add` is used for the new specification
+        wk.add(registrations)
     end,
 }
