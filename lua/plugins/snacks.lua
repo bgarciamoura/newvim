@@ -18,13 +18,13 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
-                        layout = {
-                                align = "center",
-                                width = 0.75,
-                                height = 0.85,
-                                min_width = 40,
-                                min_height = 15,
-                        },
+			layout = {
+				align = "center",
+				width = 0.75,
+				height = 1,
+				min_width = 40,
+				min_height = 15,
+			},
 			preset = {
 				keys = {
 					{ desc = "Last Session", icon = " ", action = ":SessionRestore ", key = "s" },
@@ -45,22 +45,11 @@ return {
 				},
 			},
 			sections = {
+				{ section = "header", gap = 10, pane = 1, padding = { 2, 0 } },
+				{ section = "keys", gap = 1, padding = 1, pane = 1 },
+				{ icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = { 1, 1 }, pane = 1 },
 				{
-					section = "terminal",
-					cmd = "pokemon-colorscripts -n charizard --no-title; sleep .1",
-                                       pane = 3,
-					indent = 0,
-					padding = { 0, 0 },
-					enabled = function()
-						return has_min_width(100)
-					end,
-					height = pct(0.40, vim.o.lines),
-				},
-				{ section = "header", pane = 2 },
-				{ section = "keys", gap = 1, padding = 1, pane = 2 },
-				{ icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = { 1, 1 }, pane = 2 },
-				{
-					pane = 2,
+					pane = 1,
 					icon = " ",
 					title = "Git Status",
 					section = "terminal",
@@ -73,8 +62,8 @@ return {
 					ttl = 5 * 60,
 					indent = 3,
 				},
-				{ icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1, pane = 2 },
-				{ section = "startup", pane = 2 },
+				{ icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1, pane = 1 },
+				{ section = "startup", pane = 1 },
 			},
 		},
 		debug = { enabled = true },
