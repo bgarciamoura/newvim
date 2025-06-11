@@ -66,7 +66,7 @@ return {
                 preset = "luasnip",
             },
             sources = {
-                default = { "lsp", "path", "luasnip", "buffer", "conventional_commits", "avante", "env", "nerdfont" },
+                default = { "lsp", "path", "snippets", "buffer", "conventional_commits", "avante", "env", "nerdfont" },
                 providers = {
                     lsp = {
                         name = "LSP",
