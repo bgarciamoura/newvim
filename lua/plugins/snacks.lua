@@ -18,13 +18,16 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
-			layout = {
-				align = "center",
-				width = 0.75,
-				height = 1,
-				min_width = 40,
-				min_height = 15,
-			},
+                        layout = {
+                                align = "center",
+                                width = 0.75,
+                                -- reduce height to add margin around the
+                                -- dashboard so the header is not flush with
+                                -- the top of the window
+                                height = 0.8,
+                                min_width = 40,
+                                min_height = 15,
+                        },
 			preset = {
 				keys = {
 					{ desc = "Last Session", icon = " ", action = ":SessionRestore ", key = "s" },
@@ -45,7 +48,9 @@ return {
 				},
 			},
 			sections = {
-				{ section = "header", gap = 10, pane = 1, padding = { 2, 0 } },
+                                -- add extra top padding so the header is not
+                                -- flush with the top edge of the window
+                                { section = "header", gap = 10, pane = 1, padding = { 4, 0 } },
 				{ section = "keys", gap = 1, padding = 1, pane = 1 },
 				{ icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = { 1, 1 }, pane = 1 },
 				{
