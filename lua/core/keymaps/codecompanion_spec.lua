@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Code Companion",
+        group_prefix = "<leader>c",
+        mappings = {
 		{
 			"n",
 			"<leader>cc",

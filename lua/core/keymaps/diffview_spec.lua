@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Diffview",
+        group_prefix = "<leader>d",
+        mappings = {
 		-- Comandos principais do Diffview
 		{
 			"n",

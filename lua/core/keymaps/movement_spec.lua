@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Movement",
+        group_prefix = "<leader>m",
+        mappings = {
 		-- [[ Movimentos + Centralização ]]
 		{ "n", "w", "wzz", "Próxima palavra e centralizar" },
 		{ "n", "b", "bzz", "Palavra anterior e centralizar" },
