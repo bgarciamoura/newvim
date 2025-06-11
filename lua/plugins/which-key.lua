@@ -7,6 +7,8 @@ return {
 
         local specs = require("core.keymaps.engine").get_specs()
         local groups = {}
+
+        -- collect group names by their prefixes
         for _, spec in ipairs(specs) do
             if spec.group_name and spec.group_prefix then
                 groups[spec.group_prefix] = groups[spec.group_prefix] or {}
@@ -14,8 +16,12 @@ return {
             end
         end
 
+        -- register the groups using the new which-key spec
+        local registrations = {}
         for prefix, names in pairs(groups) do
-            wk.register({ [prefix] = { name = table.concat(names, ", ") } })
+            table.insert(registrations, { prefix, group = table.concat(names, ", ") })
         end
+
+        wk.register(registrations)
     end,
 }
