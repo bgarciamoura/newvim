@@ -15,27 +15,41 @@ return {
         require("blink.cmp").setup({
             keymap = {
                 preset = "enter",
-                ["<C-space>"] = function(cmp)
-                    cmp.show()
-                end,
-                ["<C-d>"] = function(cmp)
-                    cmp.show_documentation()
-                end,
-                ["<C-n>"] = function(cmp)
-                    cmp.snippet_forward()
-                end,
-                ["<C-p>"] = function(cmp)
-                    cmp.snippet_backward()
-                end,
-                ["<C-e>"] = function(cmp)
-                    cmp.hide()
-                end,
-                ["<C-u>"] = function(cmp)
-                    cmp.scroll_docs(-4)
-                end,
-                ["<C-f>"] = function(cmp)
-                    cmp.scroll_docs(4)
-                end,
+                ["<C-space>"] = {
+                    function(cmp)
+                        cmp.show()
+                    end,
+                },
+                ["<C-d>"] = {
+                    function(cmp)
+                        cmp.show_documentation()
+                    end,
+                },
+                ["<C-n>"] = {
+                    function(cmp)
+                        cmp.snippet_forward()
+                    end,
+                },
+                ["<C-p>"] = {
+                    function(cmp)
+                        cmp.snippet_backward()
+                    end,
+                },
+                ["<C-e>"] = {
+                    function(cmp)
+                        cmp.hide()
+                    end,
+                },
+                ["<C-u>"] = {
+                    function(cmp)
+                        cmp.scroll_docs(-4)
+                    end,
+                },
+                ["<C-f>"] = {
+                    function(cmp)
+                        cmp.scroll_docs(4)
+                    end,
+                },
             },
             completion = {
                 documentation = {
