@@ -1,4 +1,6 @@
 return {
+    group_name = "Tests",
+    group_prefix = "<leader>j",
     mappings = {
         { "n", "<leader>jw", "<cmd>lua require('neotest').run.run({ jestCommand = 'pnpx jest --watch ' })<cr>", "Neotest Watch" },
         { "n", "<leader>js", "<cmd>lua require('neotest').run.stop()<cr>", "Neotest Stop" },

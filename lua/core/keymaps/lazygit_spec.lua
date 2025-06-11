@@ -1,4 +1,6 @@
 return {
+    group_name = "Git",
+    group_prefix = "<leader>g",
     mappings = {
         { "n", "<leader>gg", "<Cmd>LazyGit<CR>", "Open LazyGit" },
         { "n", "<leader>gc", "<Cmd>LazyGitCurrentFile<CR>", "LazyGit Current File" },
