@@ -1,5 +1,8 @@
 FROM debian:bookworm-slim AS builder
 
+# Versão do Neovim a ser compilada
+ARG NVIM_VERSION=v0.12.0
+
 # Evitar interações durante instalações
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Sao_Paulo
@@ -7,12 +10,13 @@ ENV TZ=America/Sao_Paulo
 # Instalar dependências de compilação
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git curl ca-certificates build-essential cmake pkg-config \
-    gettext ninja-build \
+    gettext ninja-build libtool libtool-bin autoconf automake g++ \
+    unzip doxygen \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Clonar e compilar Neovim
-RUN git clone --depth=1 https://github.com/neovim/neovim.git /tmp/neovim && \
+RUN git clone --depth=1 --branch ${NVIM_VERSION} https://github.com/neovim/neovim.git /tmp/neovim && \
     cd /tmp/neovim && \
     make CMAKE_BUILD_TYPE=Release && \
     make install && \
