@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Trouble",
+        group_prefix = "<leader>x",
+        mappings = {
 		{
 			"n",
 			"<leader>xx",

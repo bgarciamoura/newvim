@@ -1,6 +1,8 @@
 return {
-	event = "LspAttach", -- Será aplicado quando um LSP se conectar
-	mappings = {
+        event = "LspAttach", -- Será aplicado quando um LSP se conectar
+        group_name = "LSP",
+        group_prefix = "<leader>l",
+        mappings = {
 		-- Atalhos adicionais / overrides (os que você realmente precisa customizar)
 		{ "n", "gd", vim.lsp.buf.definition, "Go to definition" },
 		{ "n", "gD", vim.lsp.buf.declaration, "Go to declaration" },

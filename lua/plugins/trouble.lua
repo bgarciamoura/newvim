@@ -11,9 +11,5 @@ return {
 				information = "ℹ️",
 			},
 		})
-		-- Atalho para abrir o painel Trouble
-		vim.keymap.set("n", "<leader>xx", function()
-			require("trouble").toggle()
-		end)
-	end,
+        end,
 }

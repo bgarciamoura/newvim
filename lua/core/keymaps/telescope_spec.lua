@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Telescope",
+        group_prefix = "<leader>f",
+        mappings = {
 		{
 			"n",
 			"<leader>ff",

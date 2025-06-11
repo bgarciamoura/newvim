@@ -1,5 +1,7 @@
 return {
-	mappings = {
+        group_name = "Windows",
+        group_prefix = "<leader>w",
+        mappings = {
 		-- Criar splits
 		{ "n", "<leader>ws", "<Cmd>split<CR>", "Dividir horizontalmente", { nowait = true } },
 		{ "n", "<leader>wv", "<Cmd>vsplit<CR>", "Dividir verticalmente", { nowait = true } },

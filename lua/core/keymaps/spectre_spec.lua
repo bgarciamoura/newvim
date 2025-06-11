@@ -1,4 +1,6 @@
 return {
+  group_name = "Spectre",
+  group_prefix = "<leader>s",
   mappings = {
     {
       "n",
