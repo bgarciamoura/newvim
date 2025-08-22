@@ -21,8 +21,8 @@ function M.on_attach(client, bufnr)
 
   -- Code actions
   map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
-  map("n", "<leader>cc", vim.lsp.codelens.run, { desc = "Run codelens" })
-  map("n", "<leader>cC", vim.lsp.codelens.refresh, { desc = "Refresh & display codelens" })
+  map("n", "<leader>cl", vim.lsp.codelens.run, { desc = "Run codelens" })
+  map("n", "<leader>cL", vim.lsp.codelens.refresh, { desc = "Refresh & display codelens" })
   map("n", "<leader>cR", vim.lsp.buf.rename, { desc = "Rename" })
 
   -- Format

@@ -44,3 +44,10 @@ vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" }
 vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
 vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
 vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
+
+-- React/JSX specific keymaps (work with Comment.nvim)
+-- Note: gcc, gc, gbc, gb are automatically provided by Comment.nvim
+-- Additional useful keymaps for React development
+vim.keymap.set("n", "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
+vim.keymap.set("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
+

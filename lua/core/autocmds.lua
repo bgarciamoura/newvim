@@ -61,3 +61,16 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "BufNewFile" }, {
     vim.opt_local.conceallevel = 0
   end,
 })
+
+-- Set proper filetypes for React files
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = { "*.jsx", "*.tsx" },
+  callback = function()
+    local ft = vim.fn.expand("%:e")
+    if ft == "jsx" then
+      vim.bo.filetype = "javascriptreact"
+    elseif ft == "tsx" then
+      vim.bo.filetype = "typescriptreact"
+    end
+  end,
+})

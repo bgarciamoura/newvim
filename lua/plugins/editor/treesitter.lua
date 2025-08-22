@@ -39,6 +39,13 @@ return {
         end
       end,
     },
+    -- Context-aware commentstring for JSX/TSX support
+    {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+      opts = {
+        enable_autocmd = false, -- We'll handle this in Comment.nvim
+      },
+    },
   },
   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
   keys = {
@@ -52,6 +59,7 @@ return {
     ensure_installed = {
       "bash",
       "c",
+      "css",
       "diff",
       "html",
       "javascript",
@@ -67,6 +75,7 @@ return {
       "python",
       "query",
       "regex",
+      "scss",
       "toml",
       "tsx",
       "typescript",
