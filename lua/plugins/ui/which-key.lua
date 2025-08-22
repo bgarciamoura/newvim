@@ -10,11 +10,13 @@ return {
         -- Main leader groups
         { "<leader>b", group = "bruno/buffer", icon = { icon = "󰖟 ", color = "orange" } },
         { "<leader>c", group = "code/lsp", icon = { icon = "󰅩 ", color = "yellow" } },
+        { "<leader>d", group = "debug", icon = { icon = "󰃤 ", color = "red" } },
         { "<leader>f", group = "file/find", icon = { icon = "󰈞 ", color = "blue" } },
         { "<leader>g", group = "git", icon = { icon = "󰊢 ", color = "red" } },
         { "<leader>m", group = "markdown/todos", icon = { icon = "󰸕 ", color = "green" } },
+        { "<leader>n", group = "npm/packages", icon = { icon = "󰏗 ", color = "red" } },
         { "<leader>s", group = "search", icon = { icon = "󰍉 ", color = "cyan" } },
-        { "<leader>t", group = "terminal", icon = { icon = "󰆍 ", color = "purple" } },
+        { "<leader>t", group = "test/terminal", icon = { icon = "󰙨 ", color = "green" } },
         { "<leader>u", group = "ui/toggles", icon = { icon = "󰙵 ", color = "cyan" } },
         { "<leader>w", group = "workspace/windows", icon = { icon = "󰖲 ", color = "blue" } },
         { "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
@@ -42,6 +44,25 @@ return {
         { "<leader>cd", desc = "Line Diagnostics" },
         { "<leader>cf", desc = "Format" },
         { "<leader>cR", desc = "Rename Symbol" },
+
+        -- Debug operations (DAP)
+        { "<leader>dB", desc = "Breakpoint Condition" },
+        { "<leader>db", desc = "Toggle Breakpoint" },
+        { "<leader>dc", desc = "Continue" },
+        { "<leader>da", desc = "Run with Args" },
+        { "<leader>dC", desc = "Run to Cursor" },
+        { "<leader>dg", desc = "Go to Line (No Execute)" },
+        { "<leader>di", desc = "Step Into" },
+        { "<leader>dj", desc = "Down" },
+        { "<leader>dk", desc = "Up" },
+        { "<leader>dl", desc = "Run Last" },
+        { "<leader>do", desc = "Step Out" },
+        { "<leader>dO", desc = "Step Over" },
+        { "<leader>dp", desc = "Pause" },
+        { "<leader>dr", desc = "Toggle REPL" },
+        { "<leader>ds", desc = "Session" },
+        { "<leader>dt", desc = "Terminate" },
+        { "<leader>dw", desc = "Widgets" },
 
         -- File operations
         { "<leader>fb", desc = "Buffers" },
@@ -79,6 +100,19 @@ return {
         { "<leader>ms", desc = "Add Priority" },
         { "<leader>mp", desc = "Set Priority" },
 
+        -- NPM/Package operations (Package-info)
+        { "<leader>ns", desc = "Show Package Versions" },
+        { "<leader>nh", desc = "Hide Package Versions" },
+        { "<leader>nt", desc = "Toggle Package Versions" },
+        { "<leader>nu", desc = "Update Package" },
+        { "<leader>nd", desc = "Delete Package" },
+        { "<leader>ni", desc = "Install Package" },
+        { "<leader>np", desc = "Change Package Version" },
+        { "<leader>nU", desc = "Update All Packages" },
+        { "<leader>nI", desc = "Install All Dependencies" },
+        { "<leader>nf", desc = "Find Package" },
+        { "<leader>nc", desc = "Check Outdated" },
+
         -- Search operations
         { '<leader>s"', desc = "Registers" },
         { "<leader>sa", desc = "Auto Commands" },
@@ -104,11 +138,22 @@ return {
         { "<leader>sw", desc = "Word (Root Dir)" },
         { "<leader>sW", desc = "Word (cwd)" },
 
+        -- Test operations (Neotest)
+        { "<leader>tt", desc = "Run File Tests" },
+        { "<leader>tT", desc = "Run All Tests" },
+        { "<leader>tr", desc = "Run Nearest Test" },
+        { "<leader>tl", desc = "Run Last Test" },
+        { "<leader>ts", desc = "Toggle Summary" },
+        { "<leader>to", desc = "Show Test Output" },
+        { "<leader>tO", desc = "Toggle Output Panel" },
+        { "<leader>tS", desc = "Stop Tests" },
+        { "<leader>tw", desc = "Toggle Watch Mode" },
+        
         -- Terminal operations
-        { "<leader>tt", desc = "Toggle Terminal" },
-        { "<leader>th", desc = "Toggle Horizontal Terminal" },
-        { "<leader>tv", desc = "Toggle Vertical Terminal" },
-        { "<leader>tf", desc = "Toggle Float Terminal" },
+        { "<leader>Tt", desc = "Toggle Terminal" },
+        { "<leader>Th", desc = "Toggle Horizontal Terminal" },
+        { "<leader>Tv", desc = "Toggle Vertical Terminal" },
+        { "<leader>Tf", desc = "Toggle Float Terminal" },
         { "<leader>ld", desc = "Open Lazydocker" },
 
         -- UI toggles

@@ -3,10 +3,10 @@ return {
   version = "*",
   cmd = { "ToggleTerm", "TermExec" },
   keys = {
-    { "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
-    { "<leader>th", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Toggle Horizontal Terminal" },
-    { "<leader>tv", "<cmd>ToggleTerm direction=vertical size=80<cr>", desc = "Toggle Vertical Terminal" },
-    { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle Float Terminal" },
+    { "<leader>Tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
+    { "<leader>Th", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Toggle Horizontal Terminal" },
+    { "<leader>Tv", "<cmd>ToggleTerm direction=vertical size=80<cr>", desc = "Toggle Vertical Terminal" },
+    { "<leader>Tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle Float Terminal" },
     { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal", mode = { "n", "t" } },
   },
   opts = {

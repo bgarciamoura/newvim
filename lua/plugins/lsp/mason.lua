@@ -6,8 +6,17 @@ return {
     ensure_installed = {
       "stylua",
       "shfmt",
-      "prettierd",
-      "eslint_d",
+      "prettier", -- Changed from prettierd to match conform.nvim
+      "biome", -- Added biome for JS/TS formatting
+      -- TypeScript/JavaScript LSP servers
+      "typescript-language-server",
+      "eslint-lsp",
+      "tailwindcss-language-server",
+      -- Test runners and tools (removed - not available in mason)
+      -- Note: Jest and Vitest are handled by neotest adapters
+      -- Debug adapters
+      "node-debug2-adapter",
+      "chrome-debug-adapter",
     },
     ui = {
       icons = {
@@ -32,9 +41,11 @@ return {
 
     local function ensure_installed()
       for _, tool in ipairs(opts.ensure_installed) do
-        local p = mr.get_package(tool)
-        if not p:is_installed() then
+        local ok, p = pcall(mr.get_package, tool)
+        if ok and p and not p:is_installed() then
           p:install()
+        elseif not ok then
+          vim.notify("Mason package not found: " .. tool, vim.log.levels.WARN)
         end
       end
     end

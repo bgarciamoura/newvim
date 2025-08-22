@@ -6,7 +6,7 @@ require("core.keymaps")
 require("core.autocmds")
 require("core.lazy")
 
-vim.cmd("colorscheme aura-dark")
+vim.cmd("colorscheme nightfly")
 
 -- Configura os highlights do cmp após aplicar o tema
 --vim.api.nvim_create_autocmd("ColorScheme", {

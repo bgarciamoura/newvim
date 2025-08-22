@@ -25,10 +25,7 @@ function M.on_attach(client, bufnr)
   map("n", "<leader>cL", vim.lsp.codelens.refresh, { desc = "Refresh & display codelens" })
   map("n", "<leader>cR", vim.lsp.buf.rename, { desc = "Rename" })
 
-  -- Format
-  map({ "n", "v" }, "<leader>cf", function()
-    vim.lsp.buf.format({ async = true })
-  end, { desc = "Format" })
+  -- Format (removed - using conform.nvim via <leader>cf)
 
   -- Diagnostics
   map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line diagnostics" })

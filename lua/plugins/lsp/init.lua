@@ -68,6 +68,131 @@ return {
             },
           },
         },
+        -- TypeScript/JavaScript LSP
+        ts_ls = {
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+              suggest = {
+                includeCompletionsForModuleExports = true,
+              },
+              preferences = {
+                includePackageJsonAutoImports = "auto",
+              },
+            },
+            javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+              suggest = {
+                includeCompletionsForModuleExports = true,
+              },
+              preferences = {
+                includePackageJsonAutoImports = "auto",
+              },
+            },
+          },
+        },
+        -- ESLint LSP
+        eslint = {
+          settings = {
+            workingDirectories = { mode = "auto" },
+            experimental = {
+              useFlatConfig = true,
+            },
+          },
+          on_attach = function(client, bufnr)
+            -- Only set up auto-fix if ESLint is properly configured
+            if client.server_capabilities.executeCommandProvider then
+              -- Check if EslintFixAll command is available
+              local commands = client.server_capabilities.executeCommandProvider.commands or {}
+              local has_eslint_fix = false
+              for _, cmd in ipairs(commands) do
+                if cmd == "eslint.executeAutofix" then
+                  has_eslint_fix = true
+                  break
+                end
+              end
+              
+              if has_eslint_fix then
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                  buffer = bufnr,
+                  callback = function()
+                    local params = {
+                      command = "eslint.executeAutofix",
+                      arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
+                    }
+                    local result = vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", params, 1000)
+                    if not result or vim.tbl_isempty(result) then
+                      -- Silently handle case where ESLint fix fails
+                      vim.notify("ESLint auto-fix not available for this file", vim.log.levels.DEBUG)
+                    end
+                  end,
+                })
+              else
+                vim.notify("ESLint server started but auto-fix commands not available", vim.log.levels.WARN)
+              end
+            end
+          end,
+        },
+        -- TailwindCSS LSP
+        tailwindcss = {
+          settings = {
+            tailwindCSS = {
+              experimental = {
+                classRegex = {
+                  { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                  { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                  { "cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                },
+              },
+              validate = true,
+              lint = {
+                cssConflict = "warning",
+                invalidApply = "error",
+                invalidConfigPath = "error",
+                invalidScreen = "error",
+                invalidTailwindDirective = "error",
+                invalidVariant = "error",
+                recommendedVariantOrder = "warning",
+              },
+              classAttributes = {
+                "class",
+                "className",
+                "class:list",
+                "classList",
+                "ngClass",
+              },
+            },
+          },
+          filetypes = {
+            "html",
+            "css",
+            "scss",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "vue",
+            "svelte",
+          },
+        },
       },
     }
   end,
