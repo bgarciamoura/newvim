@@ -1,10 +1,46 @@
 local vim = vim
+
+-- Disable unused providers for faster startup
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
-vim.g.netrw_winsize = 25
+vim.g.loaded_node_provider = 0
+vim.g.loaded_python3_provider = 0
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+-- Disable some built-in plugins we don't want
+local disabled_built_ins = {
+  "2html_plugin",
+  "getscript",
+  "getscriptPlugin",
+  "gzip",
+  "logipat",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "matchit",
+  "tar",
+  "tarPlugin",
+  "rrhelper",
+  "spellfile_plugin",
+  "vimball",
+  "vimballPlugin",
+  "zip",
+  "zipPlugin",
+  "tutor",
+  "rplugin",
+  "synmenu",
+  "optwin",
+  "compiler",
+  "bugreport",
+  "ftplugin",
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+  vim.g["loaded_" .. plugin] = 1
+end
+
+-- Netrw settings
+vim.g.netrw_winsize = 25
 
 vim.o.number = true
 vim.o.relativenumber = true
@@ -37,23 +73,13 @@ vim.opt.synmaxcol = 240 -- Max column for syntax highlight
 vim.opt.updatetime = 250 -- ms to wait for trigger an event
 vim.opt.lazyredraw = false -- Don't redraw while executing macros
 vim.opt.backup = false
+vim.opt.writebackup = false -- Don't create backup files
+vim.opt.swapfile = false -- Don't create swap files
+vim.opt.undofile = true -- Enable persistent undo
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undo" -- Undo directory
 
 -- Configuração para clipboard usando win32yank
 vim.opt.clipboard = "unnamedplus"
 
-if vim.fn.has("macunix") == 0 then
-	vim.g.clipboard = {
-		name = "win32yank",
-		copy = {
-			["+"] = "win32yank.exe -i --crlf",
-			["*"] = "win32yank.exe -i --crlf",
-		},
-		paste = {
-			["+"] = "win32yank.exe -o --lf",
-			["*"] = "win32yank.exe -o --lf",
-		},
-		cache_enabled = 0,
-	}
-end
 
 
