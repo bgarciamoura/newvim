@@ -81,5 +81,8 @@ vim.opt.undodir = vim.fn.stdpath("data") .. "/undo" -- Undo directory
 -- Configuração para clipboard usando win32yank
 vim.opt.clipboard = "unnamedplus"
 
+-- Disable deprecation warnings
+vim.deprecate = function() end
+
 
 

@@ -42,7 +42,7 @@ return {
   },
   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
   keys = {
-    { "<c-space>", desc = "Increment Selection" },
+    { "<C-S-space>", desc = "Increment Selection" },
     { "<bs>", desc = "Decrement Selection", mode = "x" },
   },
   opts_extend = { "ensure_installed" },
@@ -78,8 +78,8 @@ return {
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = "<C-space>",
-        node_incremental = "<C-space>",
+        init_selection = "<C-S-space>",
+        node_incremental = "<C-S-space>",
         scope_incremental = false,
         node_decremental = "<bs>",
       },
