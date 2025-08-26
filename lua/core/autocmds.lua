@@ -74,3 +74,11 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     end
   end,
 })
+
+-- Set comment character for txt files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "text",
+  callback = function()
+    vim.bo.commentstring = "# %s"
+  end,
+})

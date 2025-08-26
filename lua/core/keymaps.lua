@@ -51,3 +51,6 @@ vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" 
 vim.keymap.set("n", "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
 vim.keymap.set("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 
+-- Macro language syntax highlighting
+vim.keymap.set("n", "<leader>sm", "<cmd>set filetype=macrolang<cr>", { desc = "Set macro syntax" })
+
