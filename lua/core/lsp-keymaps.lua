@@ -52,6 +52,12 @@ function M.on_attach(client, bufnr)
   map("n", "<leader>ll", function()
     vim.cmd("LspLog")
   end, { desc = "LSP Logs" })
+  
+  -- Mason cache cleanup
+  map("n", "<leader>mc", function()
+    vim.cmd("MasonUninstall biome")
+    vim.notify("Mason: Biome removed (if installed)", vim.log.levels.INFO)
+  end, { desc = "Remove Biome from Mason" })
 end
 
 return M

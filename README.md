@@ -191,7 +191,7 @@ nvim
 - **friendly-snippets** - Snippet collection
 
 ### Code Quality
-- **conform.nvim** - Code formatting (Prettier, Biome)
+- **conform.nvim** - Code formatting (Prettier, ESLint)
 - **nvim-lint** - Linting integration
 - **nvim-treesitter** - Syntax highlighting
 - **nvim-ts-autotag** - Auto close HTML/JSX tags
@@ -244,7 +244,7 @@ nvim
 - **Lua** - lua_ls
 
 ### Formatters (Auto-installed)
-- **JavaScript/TypeScript** - Prettier, Biome
+- **JavaScript/TypeScript** - ESLint, Prettier
 - **Lua** - stylua
 - **Shell** - shfmt
 - **Python** - black, isort
