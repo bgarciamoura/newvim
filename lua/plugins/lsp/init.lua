@@ -271,8 +271,17 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = ensure_installed,
       handlers = {
+        -- Default handler for most servers
         function(server_name)
+          -- NUCLEAR: Block Biome completely - never allow it to be setup
+          if server_name == "biome" then
+            return -- Exit early, don't setup Biome
+          end
           setup_server(server_name, servers[server_name])
+        end,
+        -- Explicit Biome handler that does nothing
+        ["biome"] = function()
+          -- DO NOTHING - Biome is permanently blocked
         end,
       },
     })
