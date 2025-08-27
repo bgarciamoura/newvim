@@ -11,21 +11,47 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   config = function()
     -- ===================================================================
-    -- SAFE ROOT DIRECTORY DETECTION - Never crashes
+    -- SAFE ROOT DIRECTORY DETECTION - Never crashes, proper type checking
     -- ===================================================================
     local function safe_root_dir(patterns, fname)
       fname = fname or vim.api.nvim_buf_get_name(0)
-      if fname == "" or fname == "[No Name]" then
+      
+      -- Handle edge cases
+      if not fname or fname == "" or fname == "[No Name]" then
         return vim.uv.cwd() or vim.fn.getcwd()
       end
       
-      local root = vim.fs.find(patterns, {
-        path = vim.fs.dirname(fname),
+      -- Ensure fname is a string
+      if type(fname) ~= "string" then
+        return vim.uv.cwd() or vim.fn.getcwd()
+      end
+      
+      -- Get directory of the file
+      local file_dir = vim.fs.dirname(fname)
+      if not file_dir or type(file_dir) ~= "string" then
+        return vim.uv.cwd() or vim.fn.getcwd()
+      end
+      
+      -- Find root files
+      local found_files = vim.fs.find(patterns, {
+        path = file_dir,
         upward = true,
         type = "file"
-      })[1]
+      })
       
-      return root and vim.fs.dirname(root) or vim.fs.dirname(fname)
+      -- Check if we found any files
+      if found_files and #found_files > 0 then
+        local root_file = found_files[1]
+        if root_file and type(root_file) == "string" then
+          local root_dir = vim.fs.dirname(root_file)
+          if root_dir and type(root_dir) == "string" then
+            return root_dir
+          end
+        end
+      end
+      
+      -- Fallback to file directory
+      return file_dir
     end
 
     -- ===================================================================
