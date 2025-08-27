@@ -7,6 +7,18 @@ return {
     "saghen/blink.cmp",
   },
   config = function()
+    -- PROTEÇÃO: Desabilitar completamente ESLint LSP
+    local lspconfig = require("lspconfig")
+    if lspconfig.eslint then
+      -- Override root_dir para evitar table.concat error
+      lspconfig.eslint.setup = function() end
+      if lspconfig.eslint.document_config then
+        lspconfig.eslint.document_config.default_config.root_dir = function()
+          return nil -- Never start ESLint LSP
+        end
+      end
+    end
+
     -- Configuração de diagnósticos
     vim.diagnostic.config({
       underline = true,
@@ -57,12 +69,12 @@ return {
         "lua_ls",          -- Lua
         "tailwindcss",     -- TailwindCSS
       },
-      automatic_installation = true,
+      automatic_installation = false, -- Disable auto LSP server setup
       handlers = {
-        -- Handler padrão
-        default_setup,
-
-        -- Configurações específicas
+        -- Handler vazio por padrão (bloqueia tudo)
+        function() end,
+        
+        -- Apenas servidores explícitos são permitidos
         ["lua_ls"] = function()
           require("lspconfig").lua_ls.setup({
             capabilities = capabilities,
