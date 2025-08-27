@@ -5,7 +5,10 @@ return {
     local lint = require("lint")
 
     lint.linters_by_ft = {
-      -- Removed JS/TS from nvim-lint - now using ESLint LSP
+      javascript = { "eslint_d" },
+      javascriptreact = { "eslint_d" },
+      typescript = { "eslint_d" },
+      typescriptreact = { "eslint_d" },
       python = { "pylint" },
       lua = { "luacheck" },
       go = { "golangcilint" },
