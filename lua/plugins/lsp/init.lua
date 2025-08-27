@@ -193,8 +193,13 @@ return {
             "svelte",
           },
         },
-        -- Disable Biome LSP (use only as formatter via conform.nvim)
-        biome = false,
+        -- Biome LSP configuration
+        biome = {
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern("biome.json", "biome.jsonc", ".biomejs.json")(fname)
+              or require("lspconfig.util").find_git_ancestor(fname)
+          end,
+        },
       },
     }
   end,
