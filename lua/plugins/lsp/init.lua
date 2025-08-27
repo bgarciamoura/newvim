@@ -1,333 +1,294 @@
+-- ===================================================================
+-- NATIVE NEOVIM LSP CONFIGURATION (0.11+)
+-- TPope Expert Solution - Eliminates root_dir crashes completely
+-- ===================================================================
+
 return {
-	"neovim/nvim-lspconfig",
-	event = { "BufReadPre", "BufNewFile" },
-	dependencies = {
-		"mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"saghen/blink.cmp",
-	},
-	opts = function()
-		return {
-			diagnostics = {
-				underline = true,
-				update_in_insert = false,
-				virtual_text = {
-					spacing = 4,
-					source = "if_many",
-					prefix = "●",
-				},
-				severity_sort = true,
-				signs = {
-					text = {
-						[vim.diagnostic.severity.ERROR] = "󰅚",
-						[vim.diagnostic.severity.WARN] = "󰀪",
-						[vim.diagnostic.severity.HINT] = "󰌶",
-						[vim.diagnostic.severity.INFO] = "󰋽",
-					},
-				},
-			},
-			inlay_hints = {
-				enabled = true,
-			},
-			capabilities = {
-				workspace = {
-					fileOperations = {
-						didRename = true,
-						willRename = true,
-					},
-				},
-			},
-			format = {
-				formatting_options = nil,
-				timeout_ms = nil,
-			},
-			servers = {
-				lua_ls = {
-					settings = {
-						Lua = {
-							workspace = {
-								checkThirdParty = false,
-							},
-							codeLens = {
-								enable = true,
-							},
-							completion = {
-								callSnippet = "Replace",
-							},
-							doc = {
-								privateName = { "^_" },
-							},
-							hint = {
-								enable = true,
-								setType = false,
-								paramType = true,
-								paramName = "Disable",
-								semicolon = "Disable",
-								arrayIndex = "Disable",
-							},
-						},
-					},
-				},
-				-- TypeScript/JavaScript LSP
-				ts_ls = {
-					-- Explicitly set filetypes to ensure tsx/jsx support
-					filetypes = {
-						"javascript",
-						"javascriptreact",
-						"javascript.jsx",
-						"typescript",
-						"typescriptreact",
-						"typescript.tsx",
-					},
-					-- Improve root directory detection
-					root_dir = function(fname)
-						local util = require("lspconfig.util")
-						return util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git")(fname)
-							or util.path.dirname(fname)
-					end,
-					-- Initialize options for better project detection
-					init_options = {
-						hostInfo = "neovim",
-						preferences = {
-							includePackageJsonAutoImports = "auto",
-							includeCompletionsForModuleExports = true,
-							includeCompletionsWithInsertText = true,
-						},
-					},
-					settings = {
-						typescript = {
-							inlayHints = {
-								includeInlayParameterNameHints = "all",
-								includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-								includeInlayFunctionParameterTypeHints = true,
-								includeInlayVariableTypeHints = true,
-								includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-								includeInlayPropertyDeclarationTypeHints = true,
-								includeInlayFunctionLikeReturnTypeHints = true,
-								includeInlayEnumMemberValueHints = true,
-							},
-							suggest = {
-								includeCompletionsForModuleExports = true,
-								includeCompletionsWithInsertText = true,
-								includeAutomaticOptionalChainCompletions = true,
-							},
-							preferences = {
-								includePackageJsonAutoImports = "auto",
-								importModuleSpecifier = "relative",
-								allowTextChangesInNewFiles = true,
-							},
-							-- Enable project-wide IntelliSense
-							workspaceSymbols = {
-								scope = "allOpenProjects",
-							},
-						},
-						javascript = {
-							inlayHints = {
-								includeInlayParameterNameHints = "all",
-								includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-								includeInlayFunctionParameterTypeHints = true,
-								includeInlayVariableTypeHints = true,
-								includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-								includeInlayPropertyDeclarationTypeHints = true,
-								includeInlayFunctionLikeReturnTypeHints = true,
-								includeInlayEnumMemberValueHints = true,
-							},
-							suggest = {
-								includeCompletionsForModuleExports = true,
-								includeCompletionsWithInsertText = true,
-								includeAutomaticOptionalChainCompletions = true,
-							},
-							preferences = {
-								includePackageJsonAutoImports = "auto",
-								importModuleSpecifier = "relative",
-								allowTextChangesInNewFiles = true,
-							},
-						},
-					},
-				},
-				-- ESLint LSP
-				eslint = {
-					-- NUCLEAR: Fix the same root_dir bug that affected Biome
-					root_dir = function(fname)
-						local util = require("lspconfig.util")
-						local root_files = {
-							".eslintrc",
-							".eslintrc.js",
-							".eslintrc.cjs",
-							".eslintrc.yaml",
-							".eslintrc.yml",
-							".eslintrc.json",
-							"eslint.config.js",
-							"eslint.config.mjs",
-							"eslint.config.cjs",
-							"package.json",
-						}
-						-- SAFE root detection - never returns nil
-						return util.root_pattern(unpack(root_files))(fname) 
-							or util.find_git_ancestor(fname) 
-							or util.path.dirname(fname)
-					end,
-					settings = {
-						workingDirectories = { mode = "auto" },
-						experimental = {
-							useFlatConfig = true,
-						},
-					},
-					on_attach = function(client, bufnr)
-						-- Only set up auto-fix if ESLint is properly configured
-						if client.server_capabilities.executeCommandProvider then
-							-- Check if EslintFixAll command is available
-							local commands = client.server_capabilities.executeCommandProvider.commands or {}
-							local has_eslint_fix = false
-							for _, cmd in ipairs(commands) do
-								if cmd == "eslint.executeAutofix" then
-									has_eslint_fix = true
-									break
-								end
-							end
+  "williamboman/mason.nvim",
+  dependencies = {
+    "saghen/blink.cmp",
+  },
+  event = { "BufReadPre", "BufNewFile" },
+  config = function()
+    -- ===================================================================
+    -- SAFE ROOT DIRECTORY DETECTION - Never crashes
+    -- ===================================================================
+    local function safe_root_dir(patterns, fname)
+      fname = fname or vim.api.nvim_buf_get_name(0)
+      if fname == "" or fname == "[No Name]" then
+        return vim.uv.cwd() or vim.fn.getcwd()
+      end
+      
+      local root = vim.fs.find(patterns, {
+        path = vim.fs.dirname(fname),
+        upward = true,
+        type = "file"
+      })[1]
+      
+      return root and vim.fs.dirname(root) or vim.fs.dirname(fname)
+    end
 
-							if has_eslint_fix then
-								vim.api.nvim_create_autocmd("BufWritePre", {
-									buffer = bufnr,
-									callback = function()
-										local params = {
-											command = "eslint.executeAutofix",
-											arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
-										}
-										local result = vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", params, 1000)
-										if not result or vim.tbl_isempty(result) then
-											-- Silently handle case where ESLint fix fails
-											vim.notify("ESLint auto-fix not available for this file", vim.log.levels.DEBUG)
-										end
-									end,
-								})
-							else
-								vim.notify("ESLint server started but auto-fix commands not available", vim.log.levels.WARN)
-							end
-						end
-					end,
-				},
-				-- TailwindCSS LSP
-				tailwindcss = {
-					settings = {
-						tailwindCSS = {
-							experimental = {
-								classRegex = {
-									{ "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-									{ "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-									{ "cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-								},
-							},
-							validate = true,
-							lint = {
-								cssConflict = "warning",
-								invalidApply = "error",
-								invalidConfigPath = "error",
-								invalidScreen = "error",
-								invalidTailwindDirective = "error",
-								invalidVariant = "error",
-								recommendedVariantOrder = "warning",
-							},
-							classAttributes = {
-								"class",
-								"className",
-								"class:list",
-								"classList",
-								"ngClass",
-							},
-						},
-					},
-					filetypes = {
-						"html",
-						"css",
-						"scss",
-						"javascript",
-						"javascriptreact",
-						"typescript",
-						"typescriptreact",
-						"vue",
-						"svelte",
-					},
-				},
-			},
-		}
-	end,
-	config = function(_, opts)
-		-- Setup diagnostics
-		vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
-		-- Setup completion
-		local capabilities = vim.tbl_deep_extend(
-			"force",
-			vim.lsp.protocol.make_client_capabilities(),
-			require("blink.cmp").get_lsp_capabilities(),
-			opts.capabilities or {}
-		)
-		-- Setup servers
-                local function setup_server(server_name, server_opts)
-                        server_opts = server_opts or {}
-                        server_opts.capabilities = vim.tbl_deep_extend("force", capabilities, server_opts.capabilities or {})
+    -- ===================================================================
+    -- DIAGNOSTICS CONFIGURATION
+    -- ===================================================================
+    vim.diagnostic.config({
+      underline = true,
+      update_in_insert = false,
+      virtual_text = {
+        spacing = 4,
+        source = "if_many",
+        prefix = "●",
+      },
+      severity_sort = true,
+      signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = "󰅚",
+          [vim.diagnostic.severity.WARN] = "󰀪",
+          [vim.diagnostic.severity.HINT] = "󰌶",
+          [vim.diagnostic.severity.INFO] = "󰋽",
+        },
+      },
+    })
 
-                        -- Add LSP keymaps
-                        server_opts.on_attach = function(client, bufnr)
-                                require("core.lsp-keymaps").on_attach(client, bufnr)
-                                if server_opts.on_attach then
-                                        server_opts.on_attach(client, bufnr)
-                                end
-                        end
+    -- ===================================================================
+    -- LSP CAPABILITIES FOR BLINK.CMP
+    -- ===================================================================
+    local capabilities = vim.tbl_deep_extend(
+      "force",
+      vim.lsp.protocol.make_client_capabilities(),
+      require("blink.cmp").get_lsp_capabilities()
+    )
 
-                        -- SAFETY: Wrap any existing root_dir to avoid crashes
-                        if server_opts.root_dir then
-                                local original_root_dir = server_opts.root_dir
-                                server_opts.root_dir = function(fname)
-                                        local ok, result = pcall(original_root_dir, fname)
-                                        if ok and result then
-                                                return result
-                                        end
-                                        local util = require("lspconfig.util")
-                                        return util.find_git_ancestor(fname) or util.path.dirname(fname)
-                                end
-                        end
+    -- ===================================================================
+    -- NATIVE LSP SERVER CONFIGURATIONS
+    -- ===================================================================
 
-                        if server_opts.setup then
-                                server_opts.setup(server_name, server_opts)
-                        else
-                                require("lspconfig")[server_name].setup(server_opts)
-                        end
-                end
+    -- TypeScript Language Server
+    vim.lsp.config.ts_ls = {
+      cmd = { "typescript-language-server", "--stdio" },
+      filetypes = {
+        "javascript",
+        "javascriptreact", 
+        "javascript.jsx",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx"
+      },
+      root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+      root_dir = function(fname)
+        return safe_root_dir({ "tsconfig.json", "jsconfig.json", "package.json", ".git" }, fname)
+      end,
+      capabilities = capabilities,
+      init_options = {
+        hostInfo = "neovim",
+        preferences = {
+          includePackageJsonAutoImports = "auto",
+          includeCompletionsForModuleExports = true,
+          includeCompletionsWithInsertText = true,
+        },
+      },
+      settings = {
+        typescript = {
+          inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          },
+          suggest = {
+            includeCompletionsForModuleExports = true,
+            includeCompletionsWithInsertText = true,
+            includeAutomaticOptionalChainCompletions = true,
+          },
+          preferences = {
+            includePackageJsonAutoImports = "auto",
+            importModuleSpecifier = "relative",
+            allowTextChangesInNewFiles = true,
+          },
+          workspaceSymbols = {
+            scope = "allOpenProjects",
+          },
+        },
+        javascript = {
+          inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          },
+          suggest = {
+            includeCompletionsForModuleExports = true,
+            includeCompletionsWithInsertText = true,
+            includeAutomaticOptionalChainCompletions = true,
+          },
+          preferences = {
+            includePackageJsonAutoImports = "auto",
+            importModuleSpecifier = "relative",
+            allowTextChangesInNewFiles = true,
+          },
+        },
+      },
+    }
 
-		-- Auto-install and setup servers
-		local servers = opts.servers or {}
-		local ensure_installed = vim.tbl_keys(servers)
+    -- Lua Language Server
+    vim.lsp.config.lua_ls = {
+      cmd = { "lua-language-server" },
+      filetypes = { "lua" },
+      root_markers = { ".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml", ".git" },
+      root_dir = function(fname)
+        return safe_root_dir({ ".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml", ".git" }, fname)
+      end,
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          workspace = {
+            checkThirdParty = false,
+          },
+          codeLens = {
+            enable = true,
+          },
+          completion = {
+            callSnippet = "Replace",
+          },
+          doc = {
+            privateName = { "^_" },
+          },
+          hint = {
+            enable = true,
+            setType = false,
+            paramType = true,
+            paramName = "Disable",
+            semicolon = "Disable",
+            arrayIndex = "Disable",
+          },
+        },
+      },
+    }
 
-		require("mason-lspconfig").setup({
-			ensure_installed = ensure_installed,
-			handlers = {
-				function(server_name)
-					-- NUCLEAR: Block any Biome LSP attempts
-					if server_name == "biome" then
-						-- Kill any existing Biome clients
-						for _, client in pairs(vim.lsp.get_clients()) do
-							if client.name == "biome" then
-								vim.lsp.stop_client(client.id, true)
-							end
-						end
-						return -- Never setup Biome
-					end
-					setup_server(server_name, servers[server_name])
-				end,
-			},
-		})
-		
-                -- NUCLEAR: Global Biome LSP killer - runs on every LSP event
-                vim.api.nvim_create_autocmd("LspAttach", {
-			callback = function(event)
-				local client = vim.lsp.get_client_by_id(event.data.client_id)
-				if client and client.name == "biome" then
-					-- Immediately stop any Biome client that tries to attach
-					vim.lsp.stop_client(client.id, true)
-					vim.notify("Biome LSP blocked - using ESLint + Prettier instead", vim.log.levels.WARN)
-				end
-			end,
-		})
-	end,
+    -- TailwindCSS Language Server
+    vim.lsp.config.tailwindcss = {
+      cmd = { "tailwindcss-language-server", "--stdio" },
+      filetypes = {
+        "html", "css", "scss", "javascript", "javascriptreact", 
+        "typescript", "typescriptreact", "vue", "svelte"
+      },
+      root_markers = { "tailwind.config.js", "tailwind.config.cjs", "tailwind.config.mjs", "tailwind.config.ts", ".git" },
+      root_dir = function(fname)
+        return safe_root_dir({ "tailwind.config.js", "tailwind.config.cjs", "tailwind.config.mjs", "tailwind.config.ts", ".git" }, fname)
+      end,
+      capabilities = capabilities,
+      settings = {
+        tailwindCSS = {
+          experimental = {
+            classRegex = {
+              { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+              { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+              { "cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+            },
+          },
+          validate = true,
+          lint = {
+            cssConflict = "warning",
+            invalidApply = "error",
+            invalidConfigPath = "error",
+            invalidScreen = "error",
+            invalidTailwindDirective = "error",
+            invalidVariant = "error",
+            recommendedVariantOrder = "warning",
+          },
+          classAttributes = {
+            "class", "className", "class:list", "classList", "ngClass",
+          },
+        },
+      },
+    }
+
+    -- ===================================================================
+    -- LSP ATTACHMENT AND KEYMAPS
+    -- ===================================================================
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(event)
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        local bufnr = event.buf
+
+        -- Block Biome if it somehow gets through
+        if client and client.name == "biome" then
+          vim.lsp.stop_client(client.id, true)
+          vim.notify("Biome LSP blocked - using ESLint + Prettier instead", vim.log.levels.WARN)
+          return
+        end
+
+        -- Attach LSP keymaps
+        require("core.lsp-keymaps").on_attach(client, bufnr)
+
+        -- Enable inlay hints if supported
+        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end
+      end,
+    })
+
+    -- ===================================================================
+    -- ENABLE LSP SERVERS FOR FILETYPES
+    -- ===================================================================
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+      callback = function(event)
+        vim.lsp.enable("ts_ls", event.buf)
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "lua" },
+      callback = function(event)
+        vim.lsp.enable("lua_ls", event.buf)
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "svelte" },
+      callback = function(event)
+        vim.lsp.enable("tailwindcss", event.buf)
+      end,
+    })
+
+    -- ===================================================================
+    -- MASON SETUP (for automatic tool installation)
+    -- ===================================================================
+    require("mason").setup({
+      ui = {
+        icons = {
+          package_installed = "✓",
+          package_pending = "➜",
+          package_uninstalled = "✗"
+        }
+      }
+    })
+
+    -- Auto-install LSP servers
+    local tools_to_install = {
+      "typescript-language-server",
+      "lua-language-server", 
+      "tailwindcss-language-server",
+      "prettier",
+      "eslint_d",
+      "stylua",
+    }
+
+    local registry = require("mason-registry")
+    for _, tool in ipairs(tools_to_install) do
+      local package = registry.get_package(tool)
+      if not package:is_installed() then
+        package:install()
+      end
+    end
+  end,
 }
