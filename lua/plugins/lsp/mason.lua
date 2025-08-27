@@ -7,7 +7,6 @@ return {
       "stylua",
       "shfmt",
       "prettier", -- Changed from prettierd to match conform.nvim
-      "biome", -- Added biome for JS/TS formatting
       -- TypeScript/JavaScript LSP servers
       "typescript-language-server",
       "eslint-lsp",
