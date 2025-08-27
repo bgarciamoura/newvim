@@ -83,13 +83,6 @@ return {
 			ghost_text = {
 				enabled = true, -- Enable ghost text for better TypeScript autocomplete
 			},
-			-- Trigger completion automatically for TypeScript
-			trigger = {
-				completion = {
-					keyword_length = 1, -- Trigger after 1 character for TS
-					keyword_regex = "[%w_\\-\\.]", -- Include dots for method chaining
-				},
-			},
 		},
 		signature = {
 			enabled = true,
