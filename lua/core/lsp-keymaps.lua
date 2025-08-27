@@ -45,6 +45,13 @@ function M.on_attach(client, bufnr)
       vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
     end, { desc = "Toggle inlay hints" })
   end
+  
+  -- LSP diagnostics and debugging
+  map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
+  map("n", "<leader>lr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
+  map("n", "<leader>ll", function()
+    vim.cmd("LspLog")
+  end, { desc = "LSP Logs" })
 end
 
 return M

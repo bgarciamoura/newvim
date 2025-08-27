@@ -70,6 +70,30 @@ return {
         },
         -- TypeScript/JavaScript LSP
         ts_ls = {
+          -- Explicitly set filetypes to ensure tsx/jsx support
+          filetypes = {
+            "javascript",
+            "javascriptreact",
+            "javascript.jsx",
+            "typescript",
+            "typescriptreact",
+            "typescript.tsx"
+          },
+          -- Improve root directory detection
+          root_dir = function(fname)
+            local util = require("lspconfig.util")
+            return util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git")(fname)
+              or util.path.dirname(fname)
+          end,
+          -- Initialize options for better project detection
+          init_options = {
+            hostInfo = "neovim",
+            preferences = {
+              includePackageJsonAutoImports = "auto",
+              includeCompletionsForModuleExports = true,
+              includeCompletionsWithInsertText = true,
+            },
+          },
           settings = {
             typescript = {
               inlayHints = {
@@ -84,9 +108,17 @@ return {
               },
               suggest = {
                 includeCompletionsForModuleExports = true,
+                includeCompletionsWithInsertText = true,
+                includeAutomaticOptionalChainCompletions = true,
               },
               preferences = {
                 includePackageJsonAutoImports = "auto",
+                importModuleSpecifier = "relative",
+                allowTextChangesInNewFiles = true,
+              },
+              -- Enable project-wide IntelliSense
+              workspaceSymbols = {
+                scope = "allOpenProjects",
               },
             },
             javascript = {
@@ -102,9 +134,13 @@ return {
               },
               suggest = {
                 includeCompletionsForModuleExports = true,
+                includeCompletionsWithInsertText = true,
+                includeAutomaticOptionalChainCompletions = true,
               },
               preferences = {
                 includePackageJsonAutoImports = "auto",
+                importModuleSpecifier = "relative",
+                allowTextChangesInNewFiles = true,
               },
             },
           },

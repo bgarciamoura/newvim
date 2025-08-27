@@ -31,6 +31,15 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			providers = {
+				lsp = {
+					name = "LSP",
+					module = "blink.cmp.sources.lsp",
+					score_offset = 1000, -- Higher priority for LSP completions
+					opts = {
+						-- Increase max items for better TypeScript completions
+						max_items = 200,
+					},
+				},
 				buffer = {
 					name = "Buffer",
 					module = "blink.cmp.sources.buffer",
@@ -49,6 +58,9 @@ return {
 						end,
 					},
 				},
+				snippets = {
+					score_offset = -1, -- Lower priority for snippets in TS files
+				},
 			},
 		},
 		completion = {
@@ -65,11 +77,18 @@ return {
 			},
 			documentation = {
 				auto_show = true,
-				auto_show_delay_ms = 200,
+				auto_show_delay_ms = 100, -- Faster documentation for better TypeScript experience
 				treesitter_highlighting = true,
 			},
 			ghost_text = {
-				enabled = false,
+				enabled = true, -- Enable ghost text for better TypeScript autocomplete
+			},
+			-- Trigger completion automatically for TypeScript
+			trigger = {
+				completion = {
+					keyword_length = 1, -- Trigger after 1 character for TS
+					keyword_regex = "[%w_\\-\\.]", -- Include dots for method chaining
+				},
 			},
 		},
 		signature = {
