@@ -193,6 +193,8 @@ return {
             "svelte",
           },
         },
+        -- Disable Biome LSP (use only as formatter via conform.nvim)
+        biome = false,
       },
     }
   end,
