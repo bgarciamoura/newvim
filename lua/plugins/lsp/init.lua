@@ -147,6 +147,26 @@ return {
 				},
 				-- ESLint LSP
 				eslint = {
+					-- NUCLEAR: Fix the same root_dir bug that affected Biome
+					root_dir = function(fname)
+						local util = require("lspconfig.util")
+						local root_files = {
+							".eslintrc",
+							".eslintrc.js",
+							".eslintrc.cjs",
+							".eslintrc.yaml",
+							".eslintrc.yml",
+							".eslintrc.json",
+							"eslint.config.js",
+							"eslint.config.mjs",
+							"eslint.config.cjs",
+							"package.json",
+						}
+						-- SAFE root detection - never returns nil
+						return util.root_pattern(unpack(root_files))(fname) 
+							or util.find_git_ancestor(fname) 
+							or util.path.dirname(fname)
+					end,
 					settings = {
 						workingDirectories = { mode = "auto" },
 						experimental = {
@@ -284,6 +304,34 @@ return {
 				end,
 			},
 		})
+		
+		-- NUCLEAR: Global LSP safety net - prevents any LSP root_dir crashes
+		local orig_setup_server = setup_server
+		setup_server = function(server_name, server_opts)
+			server_opts = server_opts or {}
+			
+			-- Block Biome permanently
+			if server_name == "biome" then
+				return
+			end
+			
+			-- SAFETY: Wrap any existing root_dir with error handling
+			if server_opts.root_dir then
+				local original_root_dir = server_opts.root_dir
+				server_opts.root_dir = function(fname)
+					local ok, result = pcall(original_root_dir, fname)
+					if ok and result then
+						return result
+					else
+						-- Fallback if root_dir crashes
+						local util = require("lspconfig.util")
+						return util.find_git_ancestor(fname) or util.path.dirname(fname)
+					end
+				end
+			end
+			
+			return orig_setup_server(server_name, server_opts)
+		end
 		
 		-- NUCLEAR: Global Biome LSP killer - runs on every LSP event
 		vim.api.nvim_create_autocmd("LspAttach", {
