@@ -1,6 +1,9 @@
 local M = {}
 
 function M.on_attach(client, bufnr)
+  -- Handle native LSP calls where client might be nil
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  
   local function map(mode, lhs, rhs, opts)
     opts = opts or {}
     opts.buffer = bufnr
@@ -39,12 +42,11 @@ function M.on_attach(client, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, { desc = "List workspace folders" })
 
-  -- Toggle inlay hints
-  if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-    map("n", "<leader>uh", function()
-      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
-    end, { desc = "Toggle inlay hints" })
-  end
+  -- Toggle inlay hints (works with native LSP)
+  map("n", "<leader>uh", function()
+    local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+    vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+  end, { desc = "Toggle inlay hints" })
   
   -- LSP diagnostics and debugging
   map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
@@ -53,11 +55,8 @@ function M.on_attach(client, bufnr)
     vim.cmd("LspLog")
   end, { desc = "LSP Logs" })
   
-  -- Mason cache cleanup
-  map("n", "<leader>mc", function()
-    vim.cmd("MasonUninstall biome")
-    vim.notify("Mason: Biome removed (if installed)", vim.log.levels.INFO)
-  end, { desc = "Remove Biome from Mason" })
+  -- Mason management
+  map("n", "<leader>lm", "<cmd>Mason<cr>", { desc = "Open Mason" })
 end
 
 return M
