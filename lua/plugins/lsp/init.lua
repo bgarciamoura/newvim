@@ -263,24 +263,37 @@ return {
 			opts.capabilities or {}
 		)
 		-- Setup servers
-		local function setup_server(server_name, server_opts)
-			server_opts = server_opts or {}
-			server_opts.capabilities = vim.tbl_deep_extend("force", capabilities, server_opts.capabilities or {})
+                local function setup_server(server_name, server_opts)
+                        server_opts = server_opts or {}
+                        server_opts.capabilities = vim.tbl_deep_extend("force", capabilities, server_opts.capabilities or {})
 
-			-- Add LSP keymaps
-			server_opts.on_attach = function(client, bufnr)
-				require("core.lsp-keymaps").on_attach(client, bufnr)
-				if server_opts.on_attach then
-					server_opts.on_attach(client, bufnr)
-				end
-			end
+                        -- Add LSP keymaps
+                        server_opts.on_attach = function(client, bufnr)
+                                require("core.lsp-keymaps").on_attach(client, bufnr)
+                                if server_opts.on_attach then
+                                        server_opts.on_attach(client, bufnr)
+                                end
+                        end
 
-			if server_opts.setup then
-				server_opts.setup(server_name, server_opts)
-			else
-				require("lspconfig")[server_name].setup(server_opts)
-			end
-		end
+                        -- SAFETY: Wrap any existing root_dir to avoid crashes
+                        if server_opts.root_dir then
+                                local original_root_dir = server_opts.root_dir
+                                server_opts.root_dir = function(fname)
+                                        local ok, result = pcall(original_root_dir, fname)
+                                        if ok and result then
+                                                return result
+                                        end
+                                        local util = require("lspconfig.util")
+                                        return util.find_git_ancestor(fname) or util.path.dirname(fname)
+                                end
+                        end
+
+                        if server_opts.setup then
+                                server_opts.setup(server_name, server_opts)
+                        else
+                                require("lspconfig")[server_name].setup(server_opts)
+                        end
+                end
 
 		-- Auto-install and setup servers
 		local servers = opts.servers or {}
@@ -305,36 +318,8 @@ return {
 			},
 		})
 		
-		-- NUCLEAR: Global LSP safety net - prevents any LSP root_dir crashes
-		local orig_setup_server = setup_server
-		setup_server = function(server_name, server_opts)
-			server_opts = server_opts or {}
-			
-			-- Block Biome permanently
-			if server_name == "biome" then
-				return
-			end
-			
-			-- SAFETY: Wrap any existing root_dir with error handling
-			if server_opts.root_dir then
-				local original_root_dir = server_opts.root_dir
-				server_opts.root_dir = function(fname)
-					local ok, result = pcall(original_root_dir, fname)
-					if ok and result then
-						return result
-					else
-						-- Fallback if root_dir crashes
-						local util = require("lspconfig.util")
-						return util.find_git_ancestor(fname) or util.path.dirname(fname)
-					end
-				end
-			end
-			
-			return orig_setup_server(server_name, server_opts)
-		end
-		
-		-- NUCLEAR: Global Biome LSP killer - runs on every LSP event
-		vim.api.nvim_create_autocmd("LspAttach", {
+                -- NUCLEAR: Global Biome LSP killer - runs on every LSP event
+                vim.api.nvim_create_autocmd("LspAttach", {
 			callback = function(event)
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 				if client and client.name == "biome" then
