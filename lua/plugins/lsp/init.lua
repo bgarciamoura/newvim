@@ -196,8 +196,32 @@ return {
         -- Biome LSP configuration
         biome = {
           root_dir = function(fname)
-            return require("lspconfig.util").root_pattern("biome.json", "biome.jsonc", ".biomejs.json")(fname)
-              or require("lspconfig.util").find_git_ancestor(fname)
+            local util = require("lspconfig.util")
+            local root_files = { "biome.json", "biome.jsonc" }
+            
+            -- Try to find Biome config files
+            local root = util.root_pattern(unpack(root_files))(fname)
+            if root then
+              return root
+            end
+            
+            -- Fallback to package.json if it contains biome config
+            local package_json_root = util.root_pattern("package.json")(fname)
+            if package_json_root then
+              local package_json_path = package_json_root .. "/package.json"
+              if vim.fn.filereadable(package_json_path) == 1 then
+                local ok, package_content = pcall(vim.fn.readfile, package_json_path)
+                if ok and type(package_content) == "table" then
+                  local content = table.concat(package_content, "\n")
+                  if content:match('"@biomejs/biome"') or content:match('"biome"') then
+                    return package_json_root
+                  end
+                end
+              end
+            end
+            
+            -- Final fallback to git root or current directory
+            return util.find_git_ancestor(fname) or vim.fn.getcwd()
           end,
         },
       },
