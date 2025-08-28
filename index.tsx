@@ -1,4 +1,3 @@
-// Test file for LSP validation
 interface User {
   id: number;
   name: string;

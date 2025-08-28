@@ -30,8 +30,12 @@ function M.on_attach(client, bufnr)
 
 	-- Diagnostics
 	map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line diagnostics" })
+	map("n", "gl", function()
+		vim.diagnostic.open_float(nil, { scope = "cursor" })
+	end, { desc = "Mostrar diagnóstico (popup)" })
 	map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 	map("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
+	map("n", "<leader>cq", vim.diagnostic.setloclist, { desc = "Abrir LocList com diagnósticos" })
 
 	-- Workspace
 	map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { desc = "Add workspace folder" })
@@ -41,17 +45,16 @@ function M.on_attach(client, bufnr)
 	end, { desc = "List workspace folders" })
 
 	-- Toggle inlay hints (works with native LSP)
-	map("n", "<leader>uh", function()
-		local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-		vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+	map("n", "H", function()
+		local buf = vim.api.nvim_get_current_buf()
+		local ih = vim.lsp.inlay_hint or vim.lsp.buf.inlay_hint
+		if vim.lsp.inlay_hint then
+			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(buf), { bufnr = buf })
+		else
+			vim.lsp.buf.inlay_hint(buf, not vim.b.inlay_hints_enabled)
+			vim.b.inlay_hints_enabled = not vim.b.inlay_hints_enabled
+		end
 	end, { desc = "Toggle inlay hints" })
-
-	-- LSP diagnostics and debugging
-	map("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
-	map("n", "<leader>lr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
-	map("n", "<leader>ll", function()
-		vim.cmd("LspLog")
-	end, { desc = "LSP Logs" })
 
 	-- Mason management
 	map("n", "<leader>lm", "<cmd>Mason<cr>", { desc = "Open Mason" })
