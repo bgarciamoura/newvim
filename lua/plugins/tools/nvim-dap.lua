@@ -50,19 +50,19 @@ return {
       },
     },
     -- Mason DAP
-    {
-      "jay-babu/mason-nvim-dap.nvim",
-      dependencies = "mason.nvim",
-      cmd = { "DapInstall", "DapUninstall" },
-      opts = {
-        automatic_installation = true,
-        handlers = {},
-        ensure_installed = {
-          "node2",
-          "chrome",
-        },
-      },
-    },
+    -- {
+    --   "jay-babu/mason-nvim-dap.nvim",
+    --   dependencies = "mason.nvim",
+    --   cmd = { "DapInstall", "DapUninstall" },
+    --   opts = {
+    --     automatic_installation = true,
+    --     handlers = {},
+    --     ensure_installed = {
+    --       "node2",
+    --       "chrome",
+    --     },
+    --   },
+    -- },
   },
   keys = {
     { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },

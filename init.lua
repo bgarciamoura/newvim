@@ -5,6 +5,10 @@ require("core.options")
 require("core.keymaps")
 require("core.autocmds")
 require("core.lazy")
+require("core.lsp")
+require("core.lsp-keymaps")
+
+
 
 vim.cmd("colorscheme nightfly")
 

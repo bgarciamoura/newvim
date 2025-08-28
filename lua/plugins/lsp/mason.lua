@@ -1,41 +1,62 @@
 return {
-  "williamboman/mason.nvim",
-  event = "VeryLazy",
-  config = function()
-    require("mason").setup({
-      ui = {
-        icons = {
-          package_installed = "✓",
-          package_pending = "➜",
-          package_uninstalled = "✗"
-        }
-      }
-    })
+	{
+		"williamboman/mason.nvim",
+		build = ":MasonUpdate",
+		config = function()
+			require("mason").setup({
+				ui = {
+					border = "rounded",
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
+			})
+		end,
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		dependencies = { "williamboman/mason.nvim" },
+		config = function()
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"lua_ls",
+					"vtsls",
+					"jsonls",
+					"html",
+					"cssls",
+					"yamlls",
+					"bashls",
+				},
+				automatic_installation = true,
+			})
+		end,
+	},
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		event = "VeryLazy",
+		dependencies = { "williamboman/mason.nvim" },
+		config = function()
+			local tools = {
+				-- JS/TS
+				"biome", -- formata e checa
+				"prettierd", -- mais rápido
+				"prettier", -- fallback
+				"eslint_d", -- se quiser usar ESLint pra formatar
 
-    -- Auto-install ferramentas necessárias
-    local registry = require("mason-registry")
-    local tools_to_install = {
-      -- LSP Servers (gerenciados pelo mason-lspconfig)
-      "typescript-language-server",
-      "lua-language-server",
-      "tailwindcss-language-server",
-      
-      -- Formatters
-      "prettier",
-      "stylua",
-      
-      -- Linters
-      "eslint_d",
-      
-      -- Debug Adapters
-      "node-debug2-adapter",
-    }
+				"stylua",
+				"shfmt",
+				"yamlfmt",
+			}
 
-    for _, tool in ipairs(tools_to_install) do
-      local package = registry.get_package(tool)
-      if not package:is_installed() then
-        package:install()
-      end
-    end
-  end,
+			require("mason-tool-installer").setup({
+				ensure_installed = tools,
+				auto_update = false, -- ligue se quiser atualizar tudo ao abrir
+				run_on_start = true, -- instala/garante na inicialização
+				start_delay = 3000, -- ms após o start do Neovim (evita travar boot)
+				debounce_hours = 24, -- não ficar rechecando toda hora
+			})
+		end,
+	},
 }
