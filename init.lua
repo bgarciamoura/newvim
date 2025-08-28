@@ -8,8 +8,6 @@ require("core.lazy")
 require("core.lsp")
 require("core.lsp-keymaps")
 
-
-
 vim.cmd("colorscheme nightfly")
 
 -- Configura os highlights do cmp após aplicar o tema
