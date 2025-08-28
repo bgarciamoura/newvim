@@ -1,4 +1,5 @@
 local capabilities = require("blink.cmp").get_lsp_capabilities()
+local lsp_keymaps = require("core.lsp-keymaps")
 
 vim.lsp.enable({
 	"lua_ls",
@@ -12,6 +13,7 @@ vim.diagnostic.config({ virtual_text = { prefix = "●" }, severity_sort = true 
 
 vim.lsp.config("*", {
 	capabilities = capabilities,
+	on_attach = lsp_keymaps.on_attach,
 })
 
 -- POPUP de diagnósticos (erro/aviso) completos da linha/cursor
