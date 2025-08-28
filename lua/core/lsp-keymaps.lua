@@ -56,6 +56,14 @@ function M.on_attach(client, bufnr)
 		end
 	end, { desc = "Toggle inlay hints" })
 
+	-- ESLint specific actions
+	map("n", "<leader>cf", function()
+		vim.lsp.buf.code_action({
+			context = { only = { "source.fixAll.eslint" } },
+			apply = true
+		})
+	end, { desc = "ESLint fix all" })
+
 	-- Mason management
 	map("n", "<leader>lm", "<cmd>Mason<cr>", { desc = "Open Mason" })
 end

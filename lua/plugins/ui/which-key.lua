@@ -44,7 +44,7 @@ return {
         { "<leader>cR", desc = "Rename Symbol" },
         { "<leader>ct", desc = "Toggle Claude Code" },
         { "<leader>cd", desc = "Line Diagnostics" },
-        { "<leader>cf", desc = "Format" },
+        { "<leader>cf", desc = "ESLint Fix All / Format" },
 
         -- Debug operations (DAP)
         { "<leader>dB", desc = "Breakpoint Condition" },

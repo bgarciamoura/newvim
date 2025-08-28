@@ -23,6 +23,7 @@ return {
 				ensure_installed = {
 					"lua_ls",
 					"vtsls",
+					"eslint", -- ESLint LSP for code actions
 					"jsonls",
 					"html",
 					"cssls",
