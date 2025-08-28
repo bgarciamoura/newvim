@@ -3,6 +3,7 @@ local vim = vim
 
 require("core.options")
 require("core.keymaps")
+require("core.keymaps-central").setup()
 require("core.autocmds")
 require("core.lazy")
 require("core.lsp")

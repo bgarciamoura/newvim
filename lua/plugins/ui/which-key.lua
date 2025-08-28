@@ -40,10 +40,11 @@ return {
         { "<leader>cc", desc = "Open Claude Code" },
         { "<leader>cl", desc = "Run Codelens" },
         { "<leader>cL", desc = "Refresh Codelens" },
+        { "<leader>cq", desc = "Open LocList with Diagnostics" },
+        { "<leader>cR", desc = "Rename Symbol" },
         { "<leader>ct", desc = "Toggle Claude Code" },
         { "<leader>cd", desc = "Line Diagnostics" },
         { "<leader>cf", desc = "Format" },
-        { "<leader>cR", desc = "Rename Symbol" },
 
         -- Debug operations (DAP)
         { "<leader>dB", desc = "Breakpoint Condition" },
@@ -128,15 +129,16 @@ return {
         { "<leader>sj", desc = "Jumplist" },
         { "<leader>sk", desc = "Key Maps" },
         { "<leader>sl", desc = "Location List" },
+        { "<leader>sm", desc = "Jump to Mark / Set Macro Syntax" },
         { "<leader>sM", desc = "Man Pages" },
-        { "<leader>sm", desc = "Jump to Mark" },
         { "<leader>so", desc = "Options" },
-        { "<leader>sR", desc = "Resume" },
+        { "<leader>sp", desc = "Spectre Search in Current File" },
         { "<leader>sq", desc = "Quickfix List" },
+        { "<leader>sR", desc = "Resume" },
         { "<leader>ss", desc = "Goto Symbol" },
         { "<leader>sS", desc = "Goto Symbol (Workspace)" },
         { "<leader>sw", desc = "Word (Root Dir)" },
-        { "<leader>sW", desc = "Word (cwd)" },
+        { "<leader>sW", desc = "Spectre Search Word/Selection" },
 
         -- Test operations (Neotest)
         { "<leader>tt", desc = "Run File Tests" },
@@ -167,6 +169,12 @@ return {
         { "<leader>wa", desc = "Add Workspace Folder" },
         { "<leader>wr", desc = "Remove Workspace Folder" },
         { "<leader>wl", desc = "List Workspace Folders" },
+
+        -- LSP/Tools specific
+        { "<leader>lg", desc = "Live Grep" },
+        { "<leader>lm", desc = "Open Mason" },
+        { "gl", desc = "Show Diagnostic (Popup)" },
+        { "H", desc = "Toggle Inlay Hints" },
 
         -- Navigation groups
         { "[", group = "prev", icon = { icon = "󰒮 ", color = "blue" } },
@@ -232,13 +240,31 @@ return {
         { "<S-h>", desc = "Prev Buffer" },
         { "<S-l>", desc = "Next Buffer" },
 
-        -- Terminal mode navigation
+        -- Terminal mode navigation (global)
         { "<C-\\>", desc = "Toggle Terminal" },
+        
+        -- Terminal mode navigation (inside terminal)
+        { "<C-h>", desc = "Go to Left Window", mode = "t" },
+        { "<C-j>", desc = "Go to Lower Window", mode = "t" },
+        { "<C-k>", desc = "Go to Upper Window", mode = "t" },
+        { "<C-l>", desc = "Go to Right Window", mode = "t" },
 
         -- Insert mode helpers
         { "<C-k>", desc = "Signature Help", mode = "i" },
         { "<C-s>", desc = "Save File", mode = { "n", "i" } },
         { "<C-z>", desc = "Undo", mode = { "n", "i" } },
+        { "<Tab>", desc = "Accept Copilot / Tab", mode = "i" },
+        { "<M-w>", desc = "Accept Word (Copilot)", mode = "i" },
+        { "<M-l>", desc = "Accept Line (Copilot)", mode = "i" },
+        { "<M-]>", desc = "Next Suggestion (Copilot)", mode = "i" },
+        { "<M-[>", desc = "Prev Suggestion (Copilot)", mode = "i" },
+        { "<C-]>", desc = "Dismiss Suggestion (Copilot)", mode = "i" },
+
+        -- Copilot Panel keymaps (when panel is open)
+        { "[[", desc = "Jump Prev (Copilot Panel)" },
+        { "]]", desc = "Jump Next (Copilot Panel)" },
+        { "gr", desc = "Refresh (Copilot Panel)" },
+        { "<M-CR>", desc = "Open Panel (Copilot)", mode = "i" },
 
         -- Visual mode operations
         { "<leader>c", desc = "Copy Selection", mode = "v" },
