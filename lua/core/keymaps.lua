@@ -54,3 +54,9 @@ vim.keymap.set("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true }
 -- Macro language syntax highlighting
 vim.keymap.set("n", "<leader>sm", "<cmd>set filetype=macrolang<cr>", { desc = "Set macro syntax" })
 
+-- OpenKore config syntax highlighting
+vim.keymap.set("n", "<leader>sc", "<cmd>set filetype=okconfig<cr>", { desc = "Set config syntax" })
+
+-- Fix line endings (convert CRLF to LF)
+vim.keymap.set("n", "<leader>fx", "<cmd>FixLineEndings<cr>", { desc = "Fix line endings" })
+

@@ -91,6 +91,7 @@ return {
         { "<leader>ghp", desc = "Preview Hunk Inline" },
         { "<leader>ghb", desc = "Blame Line" },
         { "<leader>ghB", desc = "Blame Buffer" },
+        { "<leader>gbt", desc = "Toggle Inline Blame" },
         { "<leader>ghd", desc = "Diff This" },
         { "<leader>ghD", desc = "Diff This ~" },
 

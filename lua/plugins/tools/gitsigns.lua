@@ -17,6 +17,15 @@ return {
       topdelete = { text = "" },
       changedelete = { text = "▎" },
     },
+    current_line_blame = false, -- Toggle blame line with keymap
+    current_line_blame_opts = {
+      virt_text = true,
+      virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
+      delay = 300,
+      ignore_whitespace = false,
+      virt_text_priority = 100,
+    },
+    current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
     on_attach = function(buffer)
       local gs = package.loaded.gitsigns
 
@@ -51,6 +60,7 @@ return {
       map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
       map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
       map("n", "<leader>ghB", function() gs.blame() end, "Blame Buffer")
+      map("n", "<leader>gbt", gs.toggle_current_line_blame, "Toggle Inline Blame")
       map("n", "<leader>ghd", gs.diffthis, "Diff This")
       map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
 
