@@ -88,8 +88,12 @@ end, {})
 
 -- Função para determinar a raiz do projeto
 local function get_project_root()
-	local root_files = { ".git", "package.json", "biome.json" }
-	return vim.fs.dirname(vim.fs.find(root_files, { upward = true })[1])
+        local root_files = { ".git", "package.json", "biome.json" }
+        local found = vim.fs.find(root_files, { upward = true })[1]
+        if not found then
+                return nil
+        end
+        return vim.fs.dirname(found)
 end
 
 -- Função para verificar se 'biome.json' existe na raiz do projeto
