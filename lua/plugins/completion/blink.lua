@@ -8,15 +8,10 @@ return {
 		},
 		config = function()
 			local blink = require("blink.cmp")
-
 			blink.setup({
 				keymap = {
 					preset = "enter",
-					["<C-space>"] = {
-						function(cmp)
-							cmp.show()
-						end,
-					},
+					["<C-j>"] = { "show", "show_documentation", "hide_documentation" },
 				},
 				sources = {
 					default = { "lsp", "path", "buffer" },
