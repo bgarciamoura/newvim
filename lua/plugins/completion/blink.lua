@@ -11,7 +11,12 @@ return {
 
 			blink.setup({
 				keymap = {
-					preset = "default",
+					preset = "enter",
+					["<C-space>"] = {
+						function(cmp)
+							cmp.show()
+						end,
+					},
 				},
 				sources = {
 					default = { "lsp", "path", "buffer" },
@@ -19,6 +24,12 @@ return {
 				completion = {
 					documentation = { auto_show = true },
 					menu = { border = "rounded" },
+					list = {
+						selection = {
+							preselect = false,
+							auto_insert = false,
+						},
+					},
 				},
 			})
 		end,
