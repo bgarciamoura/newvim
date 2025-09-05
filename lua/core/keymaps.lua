@@ -7,7 +7,7 @@ vim.g.maplocalleader = "\\"
 -- Basic keymaps
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-vim.keymap.set("n", "<leader>x", "<cmd>x<cr>", { desc = "Save and quit" })
+vim.keymap.set("n", "<leader>X", "<cmd>x<cr>", { desc = "Save and quit" })
 vim.keymap.set("n", "<C-s>", "<Esc>:w!<cr>", { desc = "Save file", silent = true })
 vim.keymap.set("i", "<C-s>", "<Esc>:w!<cr>", { desc = "Save file", silent = true })
 vim.keymap.set("n", "<C-z>", "<Esc>:undo<cr>", { desc = "Undo", silent = true })
@@ -34,10 +34,16 @@ vim.keymap.set("v", "<", "<gv", { desc = "Indent left" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right" })
 
 -- Move lines
-vim.keymap.set("n", "<A-j>", "<cmd>m .+10<cr>==", { desc = "Move line down" })
-vim.keymap.set("n", "<A-k>", "<cmd>m .7<cr>==", { desc = "Move line up" })
-vim.keymap.set("v", "<A-j>", ":m '>+10<cr>gv=gv", { desc = "Move selection down" })
-vim.keymap.set("v", "<A-k>", ":m '<7<cr>gv=gv", { desc = "Move selection up" })
+vim.keymap.set("n", "<A-j>", ":m .+1<cr>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-k>", ":m .-2<cr>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
+
+-- Windows/terminal fallback: some terminals don't send <A-j>/<A-k>
+vim.keymap.set("n", "<A-Down>", ":m .+1<cr>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-Up>", ":m .-2<cr>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-Down>", ":m '>+1<cr>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-Up>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
 
 -- Terminal mode navigation
 vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
@@ -59,4 +65,3 @@ vim.keymap.set("n", "<leader>sc", "<cmd>set filetype=okconfig<cr>", { desc = "Se
 
 -- Fix line endings (convert CRLF to LF)
 vim.keymap.set("n", "<leader>fx", "<cmd>FixLineEndings<cr>", { desc = "Fix line endings" })
-

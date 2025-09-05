@@ -31,11 +31,12 @@ vim.lsp.config("eslint", {
 				enable = true
 			}
 		},
+		-- Conform é a fonte de verdade para formatar e corrigir no save
 		codeActionOnSave = {
-			enable = true,
-			mode = "all"
+			enable = false,
+			mode = "all",
 		},
-		format = true,
+		format = false,
 		nodePath = "",
 		onIgnoredFiles = "off",
 		packageManager = "npm",

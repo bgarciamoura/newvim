@@ -53,7 +53,6 @@ vim.o.timeout = true
 vim.o.timeoutlen = 300
 vim.o.cursorline = true
 vim.o.encoding = "utf-8"
-vim.o.fillchars = "eob: "
 vim.o.autoread = true
 vim.o.foldcolumn = "1"
 vim.o.foldlevel = 99
@@ -61,14 +60,12 @@ vim.o.foldmethod = "expr"
 vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.o.completeopt = "menu,menuone,noselect"
-vim.o.updatetime = 500
 vim.o.signcolumn = "yes"
 -----------------------------------------------------------
 -- Memory, CPU
 -----------------------------------------------------------
 vim.opt.hidden = true -- Enable background buffers
 vim.opt.history = 100 -- Remember N lines in history
-vim.opt.lazyredraw = true -- Faster scrolling
 vim.opt.synmaxcol = 240 -- Max column for syntax highlight
 vim.opt.updatetime = 250 -- ms to wait for trigger an event
 vim.opt.lazyredraw = false -- Don't redraw while executing macros
