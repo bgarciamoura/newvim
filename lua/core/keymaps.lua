@@ -65,3 +65,22 @@ vim.keymap.set("n", "<leader>sc", "<cmd>set filetype=okconfig<cr>", { desc = "Se
 
 -- Fix line endings (convert CRLF to LF)
 vim.keymap.set("n", "<leader>fx", "<cmd>FixLineEndings<cr>", { desc = "Fix line endings" })
+
+-- LuaSnip keymaps
+vim.keymap.set({ "i", "s" }, "<Tab>", function()
+	local luasnip = require("luasnip")
+	if luasnip.expand_or_jumpable() then
+		luasnip.expand_or_jump()
+	else
+		return "<Tab>"
+	end
+end, { expr = true, silent = true, desc = "Expand snippet or jump forward" })
+
+vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+	local luasnip = require("luasnip")
+	if luasnip.jumpable(-1) then
+		luasnip.jump(-1)
+	else
+		return "<S-Tab>"
+	end
+end, { expr = true, silent = true, desc = "Jump backward in snippet" })
