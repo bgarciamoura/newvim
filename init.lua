@@ -1,22 +1,22 @@
----@diagnostic disable-next-line: undefined-global
-local vim = vim
+-- Neovim 0.12 configuration optimized for Windows Terminal + Nushell + Jupyter
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
+-- Core configuration
 require("core.options")
 require("core.keymaps")
-require("core.keymaps-central").setup()
-require("core.autocmds")
 require("core.lazy")
-require("core.lsp")
-require("core.lsp-keymaps")
+require("core.python")
+require("core.jupyter")
 
-vim.cmd("colorscheme nightfly")
+-- Set colorscheme with fallback
+local function safe_colorscheme(scheme)
+    local ok, _ = pcall(vim.cmd, "colorscheme " .. scheme)
+    if not ok then
+        vim.cmd("colorscheme habamax")
+    end
+end
 
--- Configura os highlights do cmp após aplicar o tema
---vim.api.nvim_create_autocmd("ColorScheme", {
---	callback = function()
---		require("core.cmp-highlights").setup()
---	end,
---})
-
--- Ativa os highlights no início
---require("core.cmp-highlights").setup()
+vim.schedule(function()
+    safe_colorscheme("nightfly")
+end)

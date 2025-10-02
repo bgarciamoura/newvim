@@ -22,9 +22,10 @@ require("lazy").setup({
 		{ import = "plugins.editor" },
 		{ import = "plugins.ui" },
 		{ import = "plugins.tools" },
+		{ import = "plugins.jupyter" },
 	},
 	install = { colorscheme = { "habamax" } },
-	checker = { enabled = true },
+	checker = { enabled = true, frequency = 3600 },
 	change_detection = { enabled = true, notify = false },
 	performance = {
 		rtp = {
@@ -37,7 +38,17 @@ require("lazy").setup({
 				"tohtml",
 				"tutor",
 				"zipPlugin",
+				"rplugin",
 			},
 		},
+	},
+	ui = {
+		border = "rounded",
+		backdrop = 60,
+	},
+	dev = {
+		path = "~/projects",
+		patterns = {},
+		fallback = false,
 	},
 })

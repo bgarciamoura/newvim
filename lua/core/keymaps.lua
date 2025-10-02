@@ -2,7 +2,7 @@ local vim = vim
 
 -- Leader keys
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = ","
 
 -- Basic keymaps
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
@@ -84,3 +84,145 @@ vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
 		return "<S-Tab>"
 	end
 end, { expr = true, silent = true, desc = "Jump backward in snippet" })
+
+-- Python and Jupyter keymaps
+local python_group = vim.api.nvim_create_augroup("PythonKeymaps", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = python_group,
+	pattern = { "python", "jupyter" },
+	callback = function()
+		local opts = { buffer = true, silent = true }
+
+		-- Python environment
+		vim.keymap.set(
+			"n",
+			"<leader>pv",
+			"<cmd>PyCreateVenv<cr>",
+			vim.tbl_extend("force", opts, { desc = "Create Python venv" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>pd",
+			"<cmd>PyDetectVenv<cr>",
+			vim.tbl_extend("force", opts, { desc = "Detect Python venv" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>ps",
+			"<cmd>VenvSelect<cr>",
+			vim.tbl_extend("force", opts, { desc = "Select Python venv" })
+		)
+
+		-- Jupyter workflow
+		vim.keymap.set(
+			"n",
+			"<leader>js",
+			"<cmd>JupyterStart<cr>",
+			vim.tbl_extend("force", opts, { desc = "Start Jupyter" })
+		)
+		vim.keymap.set("n", "<leader>jq", "<cmd>JupyterStop<cr>", vim.tbl_extend("force", opts, { desc = "Stop Jupyter" }))
+
+		-- Iron REPL shortcuts
+		vim.keymap.set("n", "<localleader>r", function()
+			local iron_ok, _ = pcall(function()
+				require("iron.core").send_line()
+			end)
+			
+			if not iron_ok then
+				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
+			end
+		end, vim.tbl_extend("force", opts, { desc = "Run line" }))
+		
+		vim.keymap.set("v", "<localleader>r", function()
+			local iron_ok, _ = pcall(function()
+				require("iron.core").visual_send()
+			end)
+			
+			if not iron_ok then
+				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
+			end
+		end, vim.tbl_extend("force", opts, { desc = "Run selection" }))
+		
+		vim.keymap.set("n", "<localleader>R", function()
+			local iron_ok, _ = pcall(vim.cmd, "IronRestart")
+			
+			if iron_ok then
+				vim.notify("🔄 REPL restarted", vim.log.levels.INFO)
+			else
+				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
+			end
+		end, vim.tbl_extend("force", opts, { desc = "Restart REPL" }))
+
+		-- Execute entire cell
+		vim.keymap.set("n", "<localleader>c", function()
+			local line = vim.api.nvim_win_get_cursor(0)[1]
+			local total_lines = vim.api.nvim_buf_line_count(0)
+			local start_line = line
+			local end_line = line
+			
+			-- Find start of cell (go up until # %% or beginning)
+			while start_line > 1 do
+				local content = vim.api.nvim_buf_get_lines(0, start_line - 2, start_line - 1, false)[1] or ""
+				if content:match("^%s*# %%") then
+					break
+				end
+				if content == "" and start_line < line - 5 then -- Don't go too far up for empty lines
+					start_line = start_line + 1
+					break
+				end
+				start_line = start_line - 1
+			end
+			
+			-- Find end of cell (go down until # %% or end)
+			while end_line < total_lines do
+				local content = vim.api.nvim_buf_get_lines(0, end_line, end_line + 1, false)[1] or ""
+				if content:match("^%s*# %%") and end_line > line then
+					end_line = end_line - 1
+					break
+				end
+				end_line = end_line + 1
+			end
+			
+			-- Select and send the cell
+			vim.api.nvim_win_set_cursor(0, {start_line, 0})
+			vim.cmd("normal! V")
+			vim.api.nvim_win_set_cursor(0, {end_line, 0})
+			
+			-- Send cell to Iron REPL
+			local iron_ok, _ = pcall(function()
+				require("iron.core").visual_send()
+			end)
+			
+			if not iron_ok then
+				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
+			end
+			
+			-- Return to normal mode
+			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+			vim.notify("📊 Cell executed", vim.log.levels.INFO)
+		end, vim.tbl_extend("force", opts, { desc = "Execute cell" }))
+
+		-- Iron REPL specific shortcuts
+		vim.keymap.set("n", "<localleader>rs", function()
+			pcall(vim.cmd, "IronRepl")
+			vim.notify("🚀 Iron REPL started", vim.log.levels.INFO)
+		end, vim.tbl_extend("force", opts, { desc = "Start REPL" }))
+		
+		vim.keymap.set("n", "<localleader>rf", function()
+			pcall(vim.cmd, "IronFocus")
+		end, vim.tbl_extend("force", opts, { desc = "Focus REPL" }))
+		
+		vim.keymap.set("n", "<localleader>rh", function()
+			pcall(vim.cmd, "IronHide")
+		end, vim.tbl_extend("force", opts, { desc = "Hide REPL" }))
+		
+	end,
+})
+
+-- Global Python keymaps (available in any filetype)
+vim.keymap.set("n", "<leader>Pv", "<cmd>PyCreateVenv<cr>", { desc = "Create Python venv" })
+vim.keymap.set("n", "<leader>Pd", "<cmd>PyDetectVenv<cr>", { desc = "Detect Python venv" })
+vim.keymap.set("n", "<leader>Ps", "<cmd>VenvSelect<cr>", { desc = "Select Python venv" })
+vim.keymap.set("n", "<leader>Js", "<cmd>JupyterStart<cr>", { desc = "Start Jupyter" })
+vim.keymap.set("n", "<leader>Jq", "<cmd>JupyterStop<cr>", { desc = "Stop Jupyter" })

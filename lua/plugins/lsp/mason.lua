@@ -22,6 +22,7 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"lua_ls",
+					"pyright", -- Python LSP
 					"vtsls",
 					"eslint", -- ESLint LSP for code actions
 					"jsonls",
@@ -40,6 +41,13 @@ return {
 		dependencies = { "williamboman/mason.nvim" },
 		config = function()
 			local tools = {
+				-- Python
+				"black", -- Python formatter
+				"isort", -- Import sorting
+				"flake8", -- Linting
+				"mypy", -- Type checking
+				"debugpy", -- Python debugger
+				
 				-- JS/TS
 				"biome", -- formata e checa
 				"prettierd", -- mais rápido

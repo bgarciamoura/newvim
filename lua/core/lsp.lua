@@ -3,6 +3,7 @@ local lsp_keymaps = require("core.lsp-keymaps")
 
 vim.lsp.enable({
 	"lua_ls",
+	"pyright", -- Python LSP
 	"vtsls",
 	"eslint", -- ESLint LSP for code actions and auto-fix
 	"jsonls",
@@ -25,11 +26,11 @@ vim.lsp.config("eslint", {
 		codeAction = {
 			disableRuleComment = {
 				enable = true,
-				location = "separateLine"
+				location = "separateLine",
 			},
 			showDocumentation = {
-				enable = true
-			}
+				enable = true,
+			},
 		},
 		-- Conform é a fonte de verdade para formatar e corrigir no save
 		codeActionOnSave = {
@@ -46,9 +47,42 @@ vim.lsp.config("eslint", {
 		useESLintClass = false,
 		validate = "on",
 		workingDirectory = {
-			mode = "auto"
-		}
-	}
+			mode = "auto",
+		},
+	},
+})
+
+-- Pyright Python LSP configuration
+vim.lsp.config("pyright", {
+	capabilities = capabilities,
+	on_attach = function(client, bufnr)
+		lsp_keymaps.on_attach(client, bufnr)
+
+		-- Update Python path when venv changes
+		if vim.g.python3_host_prog then
+			client.config.settings.python.pythonPath = vim.g.python3_host_prog
+			client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+		end
+	end,
+	settings = {
+		python = {
+			pythonPath = vim.g.python3_host_prog,
+			analysis = {
+				typeCheckingMode = "basic", -- "off", "basic", "strict"
+				autoSearchPaths = true,
+				useLibraryCodeForTypes = true,
+				autoImportCompletions = true,
+				diagnosticMode = "workspace", -- "openFilesOnly", "workspace"
+				stubPath = vim.fn.stdpath("data") .. "/lazy/python-type-stubs",
+			},
+		},
+	},
+	on_new_config = function(new_config, new_root_dir)
+		local python_path = vim.g.python3_host_prog
+		if python_path then
+			new_config.settings.python.pythonPath = python_path
+		end
+	end,
 })
 
 -- POPUP de diagnósticos (erro/aviso) completos da linha/cursor
