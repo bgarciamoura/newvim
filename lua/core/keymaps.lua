@@ -66,24 +66,35 @@ vim.keymap.set("n", "<leader>sc", "<cmd>set filetype=okconfig<cr>", { desc = "Se
 -- Fix line endings (convert CRLF to LF)
 vim.keymap.set("n", "<leader>fx", "<cmd>FixLineEndings<cr>", { desc = "Fix line endings" })
 
--- LuaSnip keymaps
+-- Tab keymaps with priority: Copilot > LuaSnip > Default
 vim.keymap.set({ "i", "s" }, "<Tab>", function()
+	-- 1. Check for Copilot suggestion first
+	local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
+	if copilot_ok and copilot_suggestion.is_visible() then
+		copilot_suggestion.accept()
+		return
+	end
+
+	-- 2. Check for LuaSnip
 	local luasnip = require("luasnip")
 	if luasnip.expand_or_jumpable() then
 		luasnip.expand_or_jump()
-	else
-		return "<Tab>"
+		return
 	end
-end, { expr = true, silent = true, desc = "Expand snippet or jump forward" })
+
+	-- 3. Default Tab behavior
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
+end, { silent = true, desc = "Accept Copilot or expand snippet or tab" })
 
 vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
 	local luasnip = require("luasnip")
 	if luasnip.jumpable(-1) then
 		luasnip.jump(-1)
+		return ""
 	else
 		return "<S-Tab>"
 	end
-end, { expr = true, silent = true, desc = "Jump backward in snippet" })
+end, { expr = true, silent = true, replace_keycodes = false, desc = "Jump backward in snippet" })
 
 -- Python and Jupyter keymaps
 local python_group = vim.api.nvim_create_augroup("PythonKeymaps", { clear = true })
