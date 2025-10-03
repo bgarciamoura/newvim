@@ -2,12 +2,12 @@
 return {
 	-- Iron.nvim - Python REPL (Primary solution)
 	{
-		"Vigemus/iron.nvim", 
+		"Vigemus/iron.nvim",
 		ft = { "python" },
 		cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
 		config = function()
 			local iron = require("iron.core")
-			
+
 			iron.setup({
 				config = {
 					scratch_repl = true,
@@ -23,7 +23,7 @@ return {
 				},
 				keymaps = {
 					send_motion = "<localleader>sm",
-					visual_send = "<localleader>sv", 
+					visual_send = "<localleader>sv",
 					send_line = "<localleader>sl",
 					send_until_cursor = "<localleader>su",
 					cr = "<localleader>s<cr>",
@@ -33,7 +33,7 @@ return {
 				},
 				highlight = { italic = true },
 			})
-			
+
 			-- Auto-start message for Python files
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "python",
@@ -56,27 +56,19 @@ return {
 				force_ft = nil,
 				custom_language_formatting = {},
 			})
-			
-			-- Auto-convert .ipynb to .py on open
-			vim.api.nvim_create_autocmd("BufReadPost", {
-				pattern = "*.ipynb",
-				callback = function()
-					-- Convert to python format for editing
-					vim.cmd("Jupytext --to py:percent")
-					vim.bo.filetype = "python"
-					vim.notify("📓 Notebook converted to Python format for editing", vim.log.levels.INFO)
-				end,
-			})
-			
+
 			-- Auto-sync back to .ipynb on save
 			vim.api.nvim_create_autocmd("BufWritePost", {
 				pattern = "*.py",
 				callback = function()
+					local current_file = vim.fn.expand("%:p")
 					local filename = vim.fn.expand("%:t:r")
-					local ipynb_file = filename .. ".ipynb"
+					local ipynb_file = vim.fn.expand("%:p:h") .. "\\" .. filename .. ".ipynb"
+
 					if vim.fn.filereadable(ipynb_file) == 1 then
-						vim.cmd("Jupytext --sync")
-						vim.notify("🔄 Synced with " .. ipynb_file, vim.log.levels.INFO)
+						vim.fn.system("jupytext --sync " .. vim.fn.shellescape(current_file))
+						vim.cmd('checktime')  -- Trigger reload of changed buffers
+						vim.notify("🔄 Synced with " .. filename .. ".ipynb", vim.log.levels.INFO)
 					end
 				end,
 			})
@@ -91,7 +83,6 @@ return {
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"nvim-telescope/telescope.nvim",
-			"mfussenegger/nvim-dap-python",
 		},
 		event = "VeryLazy",
 		cmd = { "VenvSelect", "VenvSelectCached" },
@@ -162,9 +153,10 @@ return {
 				},
 				codeRunner = {
 					enabled = true,
-					default_method = "iron",  -- Changed from molten to iron
+					default_method = "iron", -- Changed from molten to iron
 				},
 			})
 		end,
 	},
 }
+

@@ -82,3 +82,37 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.bo.commentstring = "# %s"
 	end,
 })
+
+-- Auto-reload buffers when files change externally
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	desc = "Check for external file changes and reload",
+	callback = function()
+		if vim.fn.mode() ~= "c" then
+			vim.cmd('checktime')
+		end
+	end,
+})
+
+-- Notify when a file is reloaded due to external changes
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+	desc = "Notify when file is reloaded",
+	callback = function()
+		vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
+	end,
+})
+
+-- Auto-show diagnostic popup when cursor holds on error
+vim.api.nvim_create_autocmd("CursorHold", {
+	desc = "Show diagnostic popup on cursor hold",
+	callback = function()
+		local opts = {
+			focusable = false,
+			close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+			border = "rounded",
+			source = "if_many",
+			prefix = "",
+			scope = "cursor",
+		}
+		vim.diagnostic.open_float(nil, opts)
+	end,
+})

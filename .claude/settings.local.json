@@ -3,7 +3,10 @@
     "allow": [
       "WebSearch",
       "Bash(jupytext:*)",
-      "Bash(nvim:*)"
+      "Bash(nvim:*)",
+      "WebFetch(domain:neovim.discourse.group)",
+      "WebFetch(domain:vi.stackexchange.com)",
+      "WebFetch(domain:batsov.com)"
     ],
     "deny": [],
     "ask": []

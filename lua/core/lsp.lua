@@ -11,8 +11,6 @@ vim.lsp.enable({
 	"cssls",
 })
 
-vim.diagnostic.config({ virtual_text = { prefix = "●" }, severity_sort = true })
-
 vim.lsp.config("*", {
 	capabilities = capabilities,
 	on_attach = lsp_keymaps.on_attach,

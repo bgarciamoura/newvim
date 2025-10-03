@@ -5,7 +5,9 @@ vim.g.maplocalleader = ","
 -- Core configuration
 require("core.options")
 require("core.keymaps")
+require("core.autocmds")
 require("core.lazy")
+require("core.lsp")
 require("core.python")
 require("core.jupyter")
 

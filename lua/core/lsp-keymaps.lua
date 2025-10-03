@@ -60,7 +60,7 @@ function M.on_attach(client, bufnr)
 	map("n", "<leader>cf", function()
 		vim.lsp.buf.code_action({
 			context = { only = { "source.fixAll.eslint" } },
-			apply = true
+			apply = true,
 		})
 	end, { desc = "ESLint fix all" })
 

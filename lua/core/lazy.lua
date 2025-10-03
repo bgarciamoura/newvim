@@ -18,10 +18,10 @@ require("lazy").setup({
 	spec = {
 		{ import = "plugins.colorschemes" },
 		{ import = "plugins.completion" },
-		{ import = "plugins.lsp" },
 		{ import = "plugins.editor" },
-		{ import = "plugins.ui" },
+		{ import = "plugins.lsp" },
 		{ import = "plugins.tools" },
+		{ import = "plugins.ui" },
 		{ import = "plugins.jupyter" },
 	},
 	install = { colorscheme = { "habamax" } },
