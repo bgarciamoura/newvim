@@ -12,7 +12,7 @@ vim.keymap.set("n", "<C-s>", "<Esc>:w!<cr>", { desc = "Save file", silent = true
 vim.keymap.set("i", "<C-s>", "<Esc>:w!<cr>", { desc = "Save file", silent = true })
 vim.keymap.set("n", "<C-z>", "<Esc>:undo<cr>", { desc = "Undo", silent = true })
 vim.keymap.set("i", "<C-z>", "<Esc>:undo<cr>", { desc = "Undo", silent = true })
-vim.keymap.set("v", "<leader>c", '"+y', { desc = "Copy selection", silent = true, nowait = true })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "Copy selection", silent = true, nowait = true })
 vim.keymap.set("n", "<C-a>", "<Cmd>keepjumps normal! ggVG<CR>", { desc = "Select the entire text", silent = true })
 
 -- Window navigation
@@ -57,8 +57,8 @@ vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" 
 vim.keymap.set("n", "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
 vim.keymap.set("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 
--- Macro language syntax highlighting
-vim.keymap.set("n", "<leader>sm", "<cmd>set filetype=macrolang<cr>", { desc = "Set macro syntax" })
+-- Macro language syntax highlighting (moved from <leader>sm to avoid conflict with Telescope)
+vim.keymap.set("n", "<leader>fM", "<cmd>set filetype=macrolang<cr>", { desc = "Set macro syntax" })
 
 -- OpenKore config syntax highlighting
 vim.keymap.set("n", "<leader>sc", "<cmd>set filetype=okconfig<cr>", { desc = "Set config syntax" })

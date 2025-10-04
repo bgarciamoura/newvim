@@ -13,11 +13,16 @@ return {
 				{ "<leader>d", group = "debug", icon = { icon = "󰃤 ", color = "red" } },
 				{ "<leader>f", group = "file/find", icon = { icon = "󰈞 ", color = "blue" } },
 				{ "<leader>g", group = "git", icon = { icon = "󰊢 ", color = "red" } },
+				{ "<leader>j", group = "jupyter", icon = { icon = "󰠮 ", color = "orange" } },
+				{ "<leader>J", group = "jupyter (global)", icon = { icon = "󰠮 ", color = "orange" } },
 				{ "<leader>m", group = "markdown/todos", icon = { icon = "󰸕 ", color = "green" } },
 				{ "<leader>n", group = "npm/packages", icon = { icon = "󰏗 ", color = "red" } },
-				{ "<leader>s", group = "search", icon = { icon = "󰍉 ", color = "cyan" } },
+				{ "<leader>p", group = "python", icon = { icon = "󰌠 ", color = "yellow" } },
+				{ "<leader>P", group = "python (global)", icon = { icon = "󰌠 ", color = "yellow" } },
+				{ "<leader>s", group = "search/spectre", icon = { icon = "󰍉 ", color = "cyan" } },
 				{ "<leader>t", group = "test/terminal", icon = { icon = "󰙨 ", color = "green" } },
 				{ "<leader>u", group = "ui/toggles", icon = { icon = "󰙵 ", color = "cyan" } },
+				{ "<leader>v", group = "venv", icon = { icon = "󰌠 ", color = "cyan" } },
 				{ "<leader>w", group = "workspace/windows", icon = { icon = "󰖲 ", color = "blue" } },
 				{ "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
 
@@ -36,15 +41,19 @@ return {
 				{ "<leader>bc", desc = "Run Current File" },
 
 				-- Code/LSP operations
-				{ "<leader>ca", desc = "Code Action" },
+				{ "<leader>ca", desc = "Code Action (with preview)" },
 				{ "<leader>cc", desc = "Open Claude Code" },
+				{ "<leader>cd", desc = "Line Diagnostics" },
+				{ "<leader>cf", desc = "ESLint Fix All / Format" },
 				{ "<leader>cl", desc = "Run Codelens" },
 				{ "<leader>cL", desc = "Refresh Codelens" },
+				{ "<leader>co", desc = "Organize Imports (TypeScript)" },
+				{ "<leader>cM", desc = "Add Missing Imports (TypeScript)" },
+				{ "<leader>cu", desc = "Remove Unused Imports (TypeScript)" },
+				{ "<leader>cD", desc = "Fix All TypeScript Issues" },
 				{ "<leader>cq", desc = "Open LocList with Diagnostics" },
 				{ "<leader>cR", desc = "Rename Symbol" },
 				{ "<leader>ct", desc = "Toggle Claude Code" },
-				{ "<leader>cd", desc = "Line Diagnostics" },
-				{ "<leader>cf", desc = "ESLint Fix All / Format" },
 
 				-- Trouble (diagnostics/quickfix)
 				{ "<leader>xx", desc = "Diagnostics (Workspace)" },
@@ -79,8 +88,10 @@ return {
 				{ "<leader>ff", desc = "Find Files (Root Dir)" },
 				{ "<leader>fF", desc = "Find Files (cwd)" },
 				{ "<leader>fg", desc = "Find Files (git-files)" },
+				{ "<leader>fM", desc = "Set Macro Syntax" },
 				{ "<leader>fr", desc = "Recent Files" },
 				{ "<leader>fR", desc = "Recent Files (cwd)" },
+				{ "<leader>fx", desc = "Fix Line Endings (CRLF→LF)" },
 
 				-- Git operations
 				{ "<leader>gc", desc = "Git Commits" },
@@ -121,11 +132,33 @@ return {
 				{ "<leader>nf", desc = "Find Package" },
 				{ "<leader>nc", desc = "Check Outdated" },
 
+				-- Python operations (buffer-local)
+				{ "<leader>pv", desc = "Create Python Venv" },
+				{ "<leader>pd", desc = "Detect Python Venv" },
+				{ "<leader>ps", desc = "Select Python Venv" },
+
+				-- Python operations (global)
+				{ "<leader>Pv", desc = "Create Python Venv (Global)" },
+				{ "<leader>Pd", desc = "Detect Python Venv (Global)" },
+				{ "<leader>Ps", desc = "Select Python Venv (Global)" },
+
+				-- Jupyter operations (buffer-local)
+				{ "<leader>js", desc = "Start Jupyter" },
+				{ "<leader>jq", desc = "Stop Jupyter" },
+
+				-- Jupyter operations (global)
+				{ "<leader>Js", desc = "Start Jupyter (Global)" },
+				{ "<leader>Jq", desc = "Stop Jupyter (Global)" },
+
+				-- Venv Selector
+				{ "<leader>vs", desc = "Select Python Venv" },
+				{ "<leader>vc", desc = "Select Cached Venv" },
+
 				-- Search operations
 				{ '<leader>s"', desc = "Registers" },
 				{ "<leader>sa", desc = "Auto Commands" },
 				{ "<leader>sb", desc = "Buffer" },
-				{ "<leader>sc", desc = "Command History" },
+				{ "<leader>sc", desc = "Set OpenKore Config Syntax" },
 				{ "<leader>sC", desc = "Commands" },
 				{ "<leader>sd", desc = "Document Diagnostics" },
 				{ "<leader>sD", desc = "Workspace Diagnostics" },
@@ -136,7 +169,7 @@ return {
 				{ "<leader>sj", desc = "Jumplist" },
 				{ "<leader>sk", desc = "Key Maps" },
 				{ "<leader>sl", desc = "Location List" },
-				{ "<leader>sm", desc = "Jump to Mark / Set Macro Syntax" },
+				{ "<leader>sm", desc = "Jump to Mark" },
 				{ "<leader>sM", desc = "Man Pages" },
 				{ "<leader>so", desc = "Options" },
 				{ "<leader>sp", desc = "Spectre Search in Current File" },
@@ -146,6 +179,7 @@ return {
 				{ "<leader>sS", desc = "Goto Symbol (Workspace)" },
 				{ "<leader>sw", desc = "Word (Root Dir)" },
 				{ "<leader>sW", desc = "Spectre Search Word/Selection" },
+
 
 				-- Test operations (Neotest)
 				{ "<leader>tt", desc = "Run File Tests" },
@@ -215,14 +249,27 @@ return {
 				{ "K", desc = "Hover" },
 				{ "gK", desc = "Signature Help" },
 
+				-- Localleader operations (Iron REPL - Python files)
+				{ ",", group = "local/iron-repl", icon = { icon = "󰌠 ", color = "blue" }, mode = "n" },
+				{ ",r", desc = "Run Line in REPL" },
+				{ ",R", desc = "Restart REPL" },
+				{ ",c", desc = "Execute Cell in REPL" },
+				{ ",rs", desc = "Start REPL" },
+				{ ",rf", desc = "Focus REPL" },
+				{ ",rh", desc = "Hide REPL" },
+				{ ",sm", desc = "Send Motion to REPL" },
+				{ ",sv", desc = "Visual Send to REPL", mode = "v" },
+				{ ",sl", desc = "Send Line to REPL" },
+				{ ",su", desc = "Send Until Cursor to REPL" },
+				{ ",s<cr>", desc = "Send and CR to REPL" },
+				{ ",si", desc = "Interrupt REPL" },
+				{ ",sq", desc = "Exit REPL" },
+				{ ",cl", desc = "Clear REPL" },
+
 				-- Fold operations
 				{ "z", group = "fold", icon = { icon = "󰘖 ", color = "purple" } },
 
-				-- Comment operations
-				{ "gc", group = "comment", icon = { icon = "󰅺 ", color = "green" } },
-				{ "gb", group = "comment block", icon = { icon = "󰅺 ", color = "green" } },
-				{ "gcc", desc = "Comment toggle current line" },
-				{ "gbc", desc = "Comment toggle current block" },
+				-- Comment operations (handled by Comment.nvim)
 
 				-- Treesitter selection
 				{ "<C-S-space>", desc = "Increment Selection" },
@@ -236,15 +283,15 @@ return {
 				{ "<leader>e", desc = "Explorer NeoTree (cwd)" },
 				{ "<leader>E", desc = "Explorer NeoTree (root)" },
 				{ "<leader>q", desc = "Quit" },
-				{ "<leader>w", desc = "Save File" },
 				{ "<leader>X", desc = "Save and Quit" },
+
+				-- Bruno buffer-local operations are registered via plugin keys, not here
 
 				-- Window operations
 				{ "<C-h>", desc = "Go to Left Window" },
 				{ "<C-j>", desc = "Go to Lower Window" },
 				{ "<C-k>", desc = "Go to Upper Window" },
 				{ "<C-l>", desc = "Go to Right Window" },
-				{ "<S-h>", desc = "Prev Buffer" },
 				{ "<S-l>", desc = "Next Buffer" },
 
 				-- Terminal mode navigation (global)
@@ -270,19 +317,16 @@ return {
 				-- Copilot Panel keymaps (when panel is open)
 				{ "[[", desc = "Jump Prev (Copilot Panel)" },
 				{ "]]", desc = "Jump Next (Copilot Panel)" },
-				{ "gr", desc = "Refresh (Copilot Panel)" },
 				{ "<M-CR>", desc = "Open Panel (Copilot)", mode = "i" },
 
 				-- Visual mode operations
-				{ "<leader>c", desc = "Copy Selection", mode = "v" },
+				{ "<leader>y", desc = "Copy Selection", mode = "v" },
 				{ "<", desc = "Indent Left", mode = "v" },
 				{ ">", desc = "Indent Right", mode = "v" },
 				{ "<A-j>", desc = "Move Selection Down", mode = "v" },
 				{ "<A-k>", desc = "Move Selection Up", mode = "v" },
 
-				-- Normal mode line movement
-				{ "<A-j>", desc = "Move Line Down" },
-				{ "<A-k>", desc = "Move Line Up" },
+				-- Normal mode line movement (fallback handled by keymaps.lua)
 
 				-- Special keys and modes
 				{ "<C-a>", desc = "Select All Text" },

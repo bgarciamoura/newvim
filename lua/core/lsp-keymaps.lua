@@ -22,8 +22,8 @@ function M.on_attach(client, bufnr)
 	map("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature help" })
 	map("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature help" })
 
-	-- Code actions
-	map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+	-- Code actions (now handled by actions-preview.nvim plugin)
+	-- map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 	map("n", "<leader>cl", vim.lsp.codelens.run, { desc = "Run codelens" })
 	map("n", "<leader>cL", vim.lsp.codelens.refresh, { desc = "Refresh & display codelens" })
 	map("n", "<leader>cR", vim.lsp.buf.rename, { desc = "Rename" })
@@ -63,6 +63,37 @@ function M.on_attach(client, bufnr)
 			apply = true,
 		})
 	end, { desc = "ESLint fix all" })
+
+	-- TypeScript/JavaScript specific actions (vtsls only)
+	if client and client.name == "vtsls" then
+		map("n", "<leader>co", function()
+			vim.lsp.buf.code_action({
+				context = { only = { "source.organizeImports" } },
+				apply = true,
+			})
+		end, { desc = "Organize imports" })
+
+		map("n", "<leader>cM", function()
+			vim.lsp.buf.code_action({
+				context = { only = { "source.addMissingImports.ts" } },
+				apply = true,
+			})
+		end, { desc = "Add missing imports" })
+
+		map("n", "<leader>cu", function()
+			vim.lsp.buf.code_action({
+				context = { only = { "source.removeUnusedImports" } },
+				apply = true,
+			})
+		end, { desc = "Remove unused imports" })
+
+		map("n", "<leader>cD", function()
+			vim.lsp.buf.code_action({
+				context = { only = { "source.fixAll.ts" } },
+				apply = true,
+			})
+		end, { desc = "Fix all TypeScript issues" })
+	end
 
 	-- Mason management
 	map("n", "<leader>lm", "<cmd>Mason<cr>", { desc = "Open Mason" })
