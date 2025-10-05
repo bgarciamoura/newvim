@@ -67,8 +67,27 @@ return {
 
 					if vim.fn.filereadable(ipynb_file) == 1 then
 						vim.fn.system("jupytext --sync " .. vim.fn.shellescape(current_file))
-						vim.cmd('checktime')  -- Trigger reload of changed buffers
+
+						-- Encontrar buffer do .ipynb e recarregá-lo
+						local ipynb_bufnr = vim.fn.bufnr(ipynb_file)
+						if ipynb_bufnr ~= -1 then
+							-- Buffer existe, recarregar
+							vim.api.nvim_buf_call(ipynb_bufnr, function()
+								vim.cmd('edit!')
+							end)
+						end
+
 						vim.notify("🔄 Synced with " .. filename .. ".ipynb", vim.log.levels.INFO)
+					end
+				end,
+			})
+
+			-- Auto-reload .ipynb files when they change externally
+			vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+				pattern = "*.ipynb",
+				callback = function()
+					if vim.fn.getcmdwintype() == '' then
+						vim.cmd('checktime')
 					end
 				end,
 			})

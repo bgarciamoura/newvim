@@ -12,7 +12,7 @@ vim.keymap.set("n", "<C-s>", "<Esc>:w!<cr>", { desc = "Save file", silent = true
 vim.keymap.set("i", "<C-s>", "<Esc>:w!<cr>", { desc = "Save file", silent = true })
 vim.keymap.set("n", "<C-z>", "<Esc>:undo<cr>", { desc = "Undo", silent = true })
 vim.keymap.set("i", "<C-z>", "<Esc>:undo<cr>", { desc = "Undo", silent = true })
-vim.keymap.set("v", "<leader>y", '"+y', { desc = "Copy selection", silent = true, nowait = true })
+vim.keymap.set("v", "<leader>c", '"+y', { desc = "Copy selection to system clipboard", silent = true, nowait = true })
 vim.keymap.set("n", "<C-a>", "<Cmd>keepjumps normal! ggVG<CR>", { desc = "Select the entire text", silent = true })
 
 -- Window navigation
@@ -134,6 +134,17 @@ vim.api.nvim_create_autocmd("FileType", {
 		)
 		vim.keymap.set("n", "<leader>jq", "<cmd>JupyterStop<cr>", vim.tbl_extend("force", opts, { desc = "Stop Jupyter" }))
 
+		-- Notebook operations
+		vim.keymap.set("n", "<leader>jm", "<cmd>NotebookAddMeta<cr>", vim.tbl_extend("force", opts, { desc = "Add Notebook Metadata" }))
+		vim.keymap.set("n", "<leader>je", "<cmd>NotebookToIpynb<cr>", vim.tbl_extend("force", opts, { desc = "Export to .ipynb" }))
+		vim.keymap.set("n", "<leader>jc", function()
+			-- Insere uma nova célula abaixo da linha atual
+			local row = vim.api.nvim_win_get_cursor(0)[1]
+			vim.api.nvim_buf_set_lines(0, row, row, false, { "", "# %%", "" })
+			-- Move cursor para dentro da nova célula
+			vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
+		end, vim.tbl_extend("force", opts, { desc = "Create new cell" }))
+
 		-- Iron REPL shortcuts
 		vim.keymap.set("n", "<localleader>r", function()
 			local iron_ok, _ = pcall(function()
@@ -167,51 +178,68 @@ vim.api.nvim_create_autocmd("FileType", {
 
 		-- Execute entire cell
 		vim.keymap.set("n", "<localleader>c", function()
-			local line = vim.api.nvim_win_get_cursor(0)[1]
+			local current_line = vim.api.nvim_win_get_cursor(0)[1]
 			local total_lines = vim.api.nvim_buf_line_count(0)
-			local start_line = line
-			local end_line = line
-			
-			-- Find start of cell (go up until # %% or beginning)
-			while start_line > 1 do
-				local content = vim.api.nvim_buf_get_lines(0, start_line - 2, start_line - 1, false)[1] or ""
-				if content:match("^%s*# %%") then
+			local all_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+			-- Find start of current cell (search backwards)
+			local cell_start = nil
+			for i = current_line, 1, -1 do
+				if all_lines[i] and all_lines[i]:match("^%s*#%s*%%%%") then
+					cell_start = i
 					break
 				end
-				if content == "" and start_line < line - 5 then -- Don't go too far up for empty lines
-					start_line = start_line + 1
-					break
-				end
-				start_line = start_line - 1
 			end
-			
-			-- Find end of cell (go down until # %% or end)
-			while end_line < total_lines do
-				local content = vim.api.nvim_buf_get_lines(0, end_line, end_line + 1, false)[1] or ""
-				if content:match("^%s*# %%") and end_line > line then
-					end_line = end_line - 1
+
+			-- If no cell marker found above, start from line 1
+			if not cell_start then
+				cell_start = 1
+			end
+
+			-- Find end of current cell (search forwards from current position)
+			local cell_end = total_lines
+			for i = current_line + 1, total_lines do
+				if all_lines[i] and all_lines[i]:match("^%s*#%s*%%%%") then
+					cell_end = i - 1
 					break
 				end
-				end_line = end_line + 1
 			end
-			
-			-- Select and send the cell
-			vim.api.nvim_win_set_cursor(0, {start_line, 0})
-			vim.cmd("normal! V")
-			vim.api.nvim_win_set_cursor(0, {end_line, 0})
-			
-			-- Send cell to Iron REPL
-			local iron_ok, _ = pcall(function()
-				require("iron.core").visual_send()
-			end)
-			
+
+			-- Collect cell lines, skipping the cell marker itself and empty lines
+			local cell_lines = {}
+			for i = cell_start, cell_end do
+				local line = all_lines[i]
+				-- Skip cell marker and empty lines at boundaries
+				if line and not line:match("^%s*#%s*%%%%") and not line:match("^%s*$") then
+					table.insert(cell_lines, line)
+				elseif line and not line:match("^%s*#%s*%%%%") and #cell_lines > 0 then
+					-- Keep empty lines in the middle
+					table.insert(cell_lines, line)
+				end
+			end
+
+			-- Remove trailing empty lines
+			while #cell_lines > 0 and cell_lines[#cell_lines]:match("^%s*$") do
+				table.remove(cell_lines)
+			end
+
+			if #cell_lines == 0 then
+				vim.notify("⚠️ Empty cell or no code to execute", vim.log.levels.WARN)
+				return
+			end
+
+			-- Send to Iron REPL
+			local iron_ok, iron = pcall(require, "iron.core")
 			if not iron_ok then
-				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
+				vim.notify("❌ No REPL available. Run ,rs first", vim.log.levels.WARN)
+				return
 			end
-			
-			-- Return to normal mode
-			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
-			vim.notify("📊 Cell executed", vim.log.levels.INFO)
+
+			-- Join lines and send as a block
+			local code_block = table.concat(cell_lines, "\n")
+			iron.send(nil, code_block .. "\n")
+
+			vim.notify("📊 Cell executed (" .. #cell_lines .. " lines)", vim.log.levels.INFO)
 		end, vim.tbl_extend("force", opts, { desc = "Execute cell" }))
 
 		-- Iron REPL specific shortcuts

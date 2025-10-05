@@ -143,8 +143,11 @@ return {
 				{ "<leader>Ps", desc = "Select Python Venv (Global)" },
 
 				-- Jupyter operations (buffer-local)
-				{ "<leader>js", desc = "Start Jupyter" },
+				{ "<leader>jc", desc = "Create New Cell" },
+				{ "<leader>je", desc = "Export to .ipynb" },
+				{ "<leader>jm", desc = "Add Notebook Metadata" },
 				{ "<leader>jq", desc = "Stop Jupyter" },
+				{ "<leader>js", desc = "Start Jupyter" },
 
 				-- Jupyter operations (global)
 				{ "<leader>Js", desc = "Start Jupyter (Global)" },
@@ -320,7 +323,7 @@ return {
 				{ "<M-CR>", desc = "Open Panel (Copilot)", mode = "i" },
 
 				-- Visual mode operations
-				{ "<leader>y", desc = "Copy Selection", mode = "v" },
+				{ "<leader>c", desc = "Copy to System Clipboard", mode = "v" },
 				{ "<", desc = "Indent Left", mode = "v" },
 				{ ">", desc = "Indent Right", mode = "v" },
 				{ "<A-j>", desc = "Move Selection Down", mode = "v" },
