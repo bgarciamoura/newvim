@@ -23,16 +23,26 @@ vim.lsp.enable({
 	"cssls",
 })
 
+-- Custom root_dir for vtsls to avoid vim.fs.root() bug
+vim.lsp.config("vtsls", {
+	capabilities = capabilities,
+	on_attach = lsp_keymaps.on_attach,
+	root_dir = function(fname)
+		local util = require("lspconfig.util")
+		return util.root_pattern("tsconfig.json", "package.json", "jsconfig.json", ".git")(fname)
+	end,
+})
+
 vim.lsp.config("*", {
 	capabilities = capabilities,
 	on_attach = lsp_keymaps.on_attach,
 })
 
 -- Disable Biome LSP (we use it only as formatter/linter, not as LSP)
--- We need to prevent it from being enabled by setting a root_dir that always returns nil
 vim.lsp.config("biome", {
 	enabled = false,
-	root_dir = function()
+	autostart = false,
+	root_dir = function(fname)
 		-- Always return nil to prevent Biome LSP from starting
 		return nil
 	end,
@@ -53,6 +63,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.lsp.config("eslint", {
 	capabilities = capabilities,
 	on_attach = lsp_keymaps.on_attach,
+	-- Custom root_dir to avoid vim.fs.root() bug with tables
+	root_dir = function(fname)
+		local util = require("lspconfig.util")
+		return util.root_pattern(
+			".eslintrc",
+			".eslintrc.js",
+			".eslintrc.cjs",
+			".eslintrc.yaml",
+			".eslintrc.yml",
+			".eslintrc.json",
+			"eslint.config.js",
+			"eslint.config.mjs",
+			"eslint.config.cjs",
+			"eslint.config.ts",
+			"package.json"
+		)(fname) or util.find_git_ancestor(fname)
+	end,
 	settings = {
 		codeAction = {
 			disableRuleComment = {
