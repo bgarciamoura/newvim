@@ -17,8 +17,24 @@ vim.lsp.config("*", {
 })
 
 -- Disable Biome LSP (we use it only as formatter/linter, not as LSP)
+-- We need to prevent it from being enabled by setting a root_dir that always returns nil
 vim.lsp.config("biome", {
 	enabled = false,
+	root_dir = function()
+		-- Always return nil to prevent Biome LSP from starting
+		return nil
+	end,
+})
+
+-- Additional safety: disable Biome via autocmd
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client and client.name == "biome" then
+			vim.lsp.stop_client(client.id)
+			vim.notify("Biome LSP was blocked (use conform/nvim-lint instead)", vim.log.levels.WARN)
+		end
+	end,
 })
 
 -- ESLint LSP specific configuration for better code actions
