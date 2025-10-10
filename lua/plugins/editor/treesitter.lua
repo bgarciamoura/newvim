@@ -54,7 +54,10 @@ return {
   },
   opts_extend = { "ensure_installed" },
   opts = {
-    highlight = { enable = true },
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false,
+    },
     indent = { enable = true },
     ensure_installed = {
       "bash",
@@ -104,6 +107,23 @@ return {
     },
   },
   config = function(_, opts)
+    -- Fix filetype to parser mapping BEFORE setup
+    -- Format: vim.treesitter.language.register(parser_name, filetype_name)
+    vim.treesitter.language.register("tsx", "typescriptreact")
+    vim.treesitter.language.register("javascript", "javascriptreact")
+
     require("nvim-treesitter.configs").setup(opts)
+
+    -- Force enable Treesitter for React filetypes
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "typescriptreact", "javascriptreact", "typescript", "javascript" },
+      callback = function(args)
+        vim.schedule(function()
+          if not pcall(vim.treesitter.start, args.buf) then
+            vim.notify("Failed to start Treesitter for " .. vim.bo[args.buf].filetype, vim.log.levels.WARN)
+          end
+        end)
+      end,
+    })
   end,
 }

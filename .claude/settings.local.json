@@ -6,7 +6,9 @@
       "Bash(nvim:*)",
       "WebFetch(domain:neovim.discourse.group)",
       "WebFetch(domain:vi.stackexchange.com)",
-      "WebFetch(domain:batsov.com)"
+      "WebFetch(domain:batsov.com)",
+      "Bash(timeout 5 nvim --headless +\"source debug-tsx.lua\" test.tsx +\"sleep 1\" +\"quit\")",
+      "Read(//c/Users/bgarciamoura/.local/**)"
     ],
     "deny": [],
     "ask": []
