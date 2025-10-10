@@ -7,6 +7,10 @@ return {
 		-- util: acha arquivo subindo diretórios
 		local function nearest(patterns, buf)
 			local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(buf or 0))
+			-- Ensure dir is a string
+			if type(dir) == "table" then
+				dir = dir[1] or vim.loop.cwd()
+			end
 			local found = vim.fs.find(patterns, { path = dir, upward = true, type = "file" })
 			return #found > 0
 		end

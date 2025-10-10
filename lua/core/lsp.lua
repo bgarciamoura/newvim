@@ -1,15 +1,4 @@
--- Fix for vim.fs.root() returning table in newer Neovim versions
--- This is a compatibility shim until nvim-lspconfig is updated
-local original_fs_root = vim.fs.root
-vim.fs.root = function(source, marker)
-	local result = original_fs_root(source, marker)
-	-- If result is a table, return the first element
-	if type(result) == "table" then
-		return result[1]
-	end
-	return result
-end
-
+-- Note: vim.fs compatibility patches are applied in init.lua via core.fs-compat
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 local lsp_keymaps = require("core.lsp-keymaps")
 

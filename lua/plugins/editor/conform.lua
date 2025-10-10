@@ -1,5 +1,9 @@
 -- helper pra detectar arquivos no projeto
 local function has_any(root, patterns)
+	-- Ensure root is a string, not a table
+	if type(root) == "table" then
+		root = root[1] or vim.loop.cwd()
+	end
 	local found = vim.fs.find(patterns, { path = root, upward = true, type = "file", stop = vim.loop.os_homedir() })
 	return #found > 0
 end

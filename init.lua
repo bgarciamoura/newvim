@@ -2,6 +2,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
+-- CRITICAL: Apply vim.fs compatibility patches FIRST (for Neovim 0.12+)
+require("core.fs-compat").setup()
+
 -- Core configuration
 require("core.options")
 require("core.keymaps")
