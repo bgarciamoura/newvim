@@ -5,12 +5,8 @@ local function has_any(root, patterns)
 end
 
 local function project_root()
-	local root = vim.fs.root(0, { "pnpm-workspace.yaml", "package.json", "tsconfig.json", ".git" })
-	-- vim.fs.root() pode retornar string, array ou nil dependendo da versão do Neovim
-	if type(root) == "table" then
-		root = root[1]
-	end
-	return root or vim.loop.cwd()
+	-- Note: vim.fs.root() is patched in core/lsp.lua to handle table returns
+	return vim.fs.root(0, { "pnpm-workspace.yaml", "package.json", "tsconfig.json", ".git" }) or vim.loop.cwd()
 end
 
 -- condições por projeto
