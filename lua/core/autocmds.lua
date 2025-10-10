@@ -62,18 +62,8 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "BufNewFile" }, {
 	end,
 })
 
--- Set proper filetypes for React files
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = { "*.jsx", "*.tsx" },
-	callback = function()
-		local ft = vim.fn.expand("%:e")
-		if ft == "jsx" then
-			vim.bo.filetype = "javascriptreact"
-		elseif ft == "tsx" then
-			vim.bo.filetype = "typescriptreact"
-		end
-	end,
-})
+-- Note: Neovim automatically detects .jsx as javascriptreact and .tsx as typescriptreact
+-- This autocmd is not needed in modern Neovim versions and can cause issues with LSP initialization
 
 -- Set comment character for txt files
 vim.api.nvim_create_autocmd("FileType", {

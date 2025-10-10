@@ -1,11 +1,6 @@
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 local lsp_keymaps = require("core.lsp-keymaps")
 
--- Disable Biome LSP (we use it only as formatter/linter via conform/nvim-lint)
-vim.lsp.config("biome", {
-	enabled = false,
-})
-
 vim.lsp.enable({
 	"lua_ls",
 	"pyright", -- Python LSP
@@ -19,6 +14,11 @@ vim.lsp.enable({
 vim.lsp.config("*", {
 	capabilities = capabilities,
 	on_attach = lsp_keymaps.on_attach,
+})
+
+-- Disable Biome LSP (we use it only as formatter/linter, not as LSP)
+vim.lsp.config("biome", {
+	enabled = false,
 })
 
 -- ESLint LSP specific configuration for better code actions
