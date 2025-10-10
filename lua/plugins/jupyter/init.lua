@@ -63,7 +63,8 @@ return {
 				callback = function()
 					local current_file = vim.fn.expand("%:p")
 					local filename = vim.fn.expand("%:t:r")
-					local ipynb_file = vim.fn.expand("%:p:h") .. "\\" .. filename .. ".ipynb"
+					local separator = package.config:sub(1, 1) -- Gets OS path separator
+					local ipynb_file = vim.fn.expand("%:p:h") .. separator .. filename .. ".ipynb"
 
 					if vim.fn.filereadable(ipynb_file) == 1 then
 						vim.fn.system("jupytext --sync " .. vim.fn.shellescape(current_file))
@@ -110,34 +111,60 @@ return {
 			{ "<leader>vc", "<cmd>VenvSelectCached<cr>", desc = "Select Cached Venv" },
 		},
 		config = function()
-			require("venv-selector").setup({
+			local is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
+			local config = {
 				settings = {
-					search = {
+					search = {},
+				},
+				options = {
+					notify_user_on_venv_activation = true,
+				},
+			}
+
+			if is_windows then
+				local username = vim.env.USERNAME or vim.env.USER
+				if username then
+					config.settings.search = {
 						my_venvs = {
 							command = "fd python.exe .venv Scripts",
 						},
 						anaconda_base = {
 							command = "fd python.exe /c/Users/"
-								.. vim.env.USERNAME
+								.. username
 								.. "/anaconda3/envs /c/ProgramData/anaconda3/envs",
 							type = "anaconda",
 						},
 						anaconda_envs = {
 							command = "fd python.exe /c/Users/"
-								.. vim.env.USERNAME
+								.. username
 								.. "/miniconda3/envs /c/ProgramData/miniconda3/envs",
 							type = "anaconda",
 						},
 						miniconda = {
-							command = "fd python.exe /c/Users/" .. vim.env.USERNAME .. "/miniconda3 /c/ProgramData/miniconda3",
+							command = "fd python.exe /c/Users/" .. username .. "/miniconda3 /c/ProgramData/miniconda3",
 							type = "miniconda",
 						},
+					}
+				end
+			else
+				-- macOS/Linux
+				local home = vim.env.HOME or ""
+				config.settings.search = {
+					my_venvs = {
+						command = "fd python$ .venv bin",
 					},
-				},
-				options = {
-					notify_user_on_venv_activation = true,
-				},
-			})
+					anaconda_base = {
+						command = "fd python$ " .. home .. "/anaconda3/envs /opt/anaconda3/envs",
+						type = "anaconda",
+					},
+					miniconda = {
+						command = "fd python$ " .. home .. "/miniconda3 /opt/miniconda3",
+						type = "miniconda",
+					},
+				}
+			end
+
+			require("venv-selector").setup(config)
 		end,
 	},
 
