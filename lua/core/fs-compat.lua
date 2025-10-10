@@ -5,6 +5,9 @@ local M = {}
 -- Store original functions
 local original_fs_root = vim.fs.root
 local original_fs_find = vim.fs.find
+local original_fs_joinpath = vim.fs.joinpath or function(...)
+	return table.concat({...}, "/")
+end
 
 -- Wrapper for vim.fs.root that ensures it always returns string or nil
 function M.root(source, marker)
@@ -35,15 +38,37 @@ function M.find(names, opts)
 	return result
 end
 
+-- Wrapper for vim.fs.joinpath that ensures all arguments are strings
+function M.joinpath(...)
+	local args = {...}
+	local clean_args = {}
+
+	for i, arg in ipairs(args) do
+		if type(arg) == "table" then
+			-- If it's a table, take the first element
+			table.insert(clean_args, arg[1] or "")
+		elseif type(arg) == "string" then
+			table.insert(clean_args, arg)
+		else
+			-- Convert to string
+			table.insert(clean_args, tostring(arg))
+		end
+	end
+
+	return original_fs_joinpath(unpack(clean_args))
+end
+
 -- Apply patches globally
 function M.setup()
 	-- Override vim.fs functions globally
 	vim.fs.root = M.root
 	vim.fs.find = M.find
+	vim.fs.joinpath = M.joinpath
 
-	-- Also patch vim.fs._original for safety
+	-- Store originals for debugging
 	vim.fs._original_root = original_fs_root
 	vim.fs._original_find = original_fs_find
+	vim.fs._original_joinpath = original_fs_joinpath
 end
 
 return M
