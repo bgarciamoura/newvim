@@ -68,16 +68,21 @@ vim.keymap.set("n", "<leader>fx", "<cmd>FixLineEndings<cr>", { desc = "Fix line 
 
 -- Tab keymaps with priority: Copilot > LuaSnip > Default
 vim.keymap.set({ "i", "s" }, "<Tab>", function()
-	-- 1. Check for Copilot suggestion first
+	-- 1. Check for Copilot suggestion first (highest priority)
 	local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
 	if copilot_ok and copilot_suggestion.is_visible() then
 		copilot_suggestion.accept()
 		return
 	end
 
-	-- 2. Check for LuaSnip
+	-- 2. Check for LuaSnip ONLY if no Copilot suggestion is visible
 	local luasnip = require("luasnip")
 	if luasnip.expand_or_jumpable() then
+		-- Double-check that Copilot still doesn't have a suggestion
+		if copilot_ok and copilot_suggestion.is_visible() then
+			copilot_suggestion.accept()
+			return
+		end
 		luasnip.expand_or_jump()
 		return
 	end

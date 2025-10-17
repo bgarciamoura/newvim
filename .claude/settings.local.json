@@ -9,7 +9,9 @@
       "WebFetch(domain:batsov.com)",
       "Bash(timeout 5 nvim --headless +\"source debug-tsx.lua\" test.tsx +\"sleep 1\" +\"quit\")",
       "Read(//c/Users/bgarciamoura/.local/**)",
-      "Bash(timeout 10 nvim:*)"
+      "Bash(timeout 10 nvim:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [],
     "ask": []

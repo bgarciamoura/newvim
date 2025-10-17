@@ -10,6 +10,7 @@ return {
 				-- Main leader groups
 				{ "<leader>b", group = "bruno/buffer", icon = { icon = "󰖟 ", color = "orange" } },
 				{ "<leader>c", group = "code/lsp", icon = { icon = "󰅩 ", color = "yellow" } },
+				{ "<leader>C", group = "csv", icon = { icon = "󰈙 ", color = "green" } },
 				{ "<leader>d", group = "debug", icon = { icon = "󰃤 ", color = "red" } },
 				{ "<leader>f", group = "file/find", icon = { icon = "󰈞 ", color = "blue" } },
 				{ "<leader>g", group = "git", icon = { icon = "󰊢 ", color = "red" } },
@@ -54,6 +55,11 @@ return {
 				{ "<leader>cq", desc = "Open LocList with Diagnostics" },
 				{ "<leader>cR", desc = "Rename Symbol" },
 				{ "<leader>ct", desc = "Toggle Claude Code" },
+
+				-- CSV operations
+				{ "<leader>Ct", desc = "Toggle CSV View" },
+				{ "<leader>Ce", desc = "Enable CSV View" },
+				{ "<leader>Cd", desc = "Disable CSV View" },
 
 				-- Trouble (diagnostics/quickfix)
 				{ "<leader>xx", desc = "Diagnostics (Workspace)" },
@@ -337,6 +343,8 @@ return {
 
 				-- Text objects
 				{ "ih", desc = "GitSigns Select Hunk", mode = { "o", "x" } },
+				{ "if", desc = "Inner CSV Field", mode = { "o", "x" } },
+				{ "af", desc = "Outer CSV Field", mode = { "o", "x" } },
 			},
 		},
 	},
