@@ -13,6 +13,10 @@ return {
 				require("telescope").load_extension("fzf")
 			end,
 		},
+		{
+			"nvim-telescope/telescope-file-browser.nvim",
+			dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+		},
 	},
 	keys = {
 		{
@@ -28,6 +32,11 @@ return {
 				require("telescope.builtin").find_files()
 			end,
 			desc = "Find Files (Root Dir)",
+		},
+		{
+			"<leader>fB",
+			":Telescope file_browser path=%:p:h select_buffer=true<CR>",
+			desc = "File Browser",
 		},
 		-- Live grep shortcut
 		{
@@ -216,6 +225,18 @@ return {
 					find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
 				},
 			},
+			extensions = {
+				file_browser = {
+					theme = "dropdown",
+					hijack_netrw = true,
+				},
+			},
 		}
+	end,
+	config = function(_, opts)
+		local telescope = require("telescope")
+		telescope.setup(opts)
+		telescope.load_extension("file_browser")
+		pcall(telescope.load_extension, "fzf")
 	end,
 }
