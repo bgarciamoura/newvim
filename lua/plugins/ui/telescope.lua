@@ -205,7 +205,6 @@ return {
 				end,
 				mappings = {
 					i = {
-						["<c-t>"] = open_with_trouble,
 						["<a-t>"] = open_with_trouble,
 						["<a-i>"] = find_files_no_ignore,
 						["<a-h>"] = find_files_with_hidden,
@@ -213,8 +212,15 @@ return {
 						["<C-Up>"] = actions.cycle_history_prev,
 						["<C-f>"] = actions.preview_scrolling_down,
 						["<C-b>"] = actions.preview_scrolling_up,
+						["<C-\\>"] = actions.select_vertical,
+						["<C-x>"] = actions.select_horizontal,
+						["<C-t>"] = actions.select_tab,
 					},
 					n = {
+						["<CR>"] = actions.select_default,
+						["<C-\\>"] = actions.select_vertical,
+						["<C-x>"] = actions.select_horizontal,
+						["<C-t>"] = actions.select_tab,
 						["q"] = actions.close,
 					},
 				},
@@ -229,6 +235,20 @@ return {
 				file_browser = {
 					theme = "dropdown",
 					hijack_netrw = true,
+					grouped = true,
+					mappings = {
+						["i"] = {
+							["<C-]>"] = actions.select_vertical,
+							["<C-x>"] = actions.select_horizontal,
+							["<C-t>"] = actions.select_tab,
+						},
+						["n"] = {
+							["<CR>"] = actions.select_default,
+							["<C-]>"] = actions.select_vertical,
+							["<C-x>"] = actions.select_horizontal,
+							["<C-t>"] = actions.select_tab,
+						},
+					},
 				},
 			},
 		}

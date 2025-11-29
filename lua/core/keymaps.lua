@@ -140,8 +140,18 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.keymap.set("n", "<leader>jq", "<cmd>JupyterStop<cr>", vim.tbl_extend("force", opts, { desc = "Stop Jupyter" }))
 
 		-- Notebook operations
-		vim.keymap.set("n", "<leader>jm", "<cmd>NotebookAddMeta<cr>", vim.tbl_extend("force", opts, { desc = "Add Notebook Metadata" }))
-		vim.keymap.set("n", "<leader>je", "<cmd>NotebookToIpynb<cr>", vim.tbl_extend("force", opts, { desc = "Export to .ipynb" }))
+		vim.keymap.set(
+			"n",
+			"<leader>jm",
+			"<cmd>NotebookAddMeta<cr>",
+			vim.tbl_extend("force", opts, { desc = "Add Notebook Metadata" })
+		)
+		vim.keymap.set(
+			"n",
+			"<leader>je",
+			"<cmd>NotebookToIpynb<cr>",
+			vim.tbl_extend("force", opts, { desc = "Export to .ipynb" })
+		)
 		vim.keymap.set("n", "<leader>jc", function()
 			-- Insere uma nova célula abaixo da linha atual
 			local row = vim.api.nvim_win_get_cursor(0)[1]
@@ -155,25 +165,25 @@ vim.api.nvim_create_autocmd("FileType", {
 			local iron_ok, _ = pcall(function()
 				require("iron.core").send_line()
 			end)
-			
+
 			if not iron_ok then
 				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
 			end
 		end, vim.tbl_extend("force", opts, { desc = "Run line" }))
-		
+
 		vim.keymap.set("v", "<localleader>r", function()
 			local iron_ok, _ = pcall(function()
 				require("iron.core").visual_send()
 			end)
-			
+
 			if not iron_ok then
 				vim.notify("No REPL available. Run ,rs first", vim.log.levels.WARN)
 			end
 		end, vim.tbl_extend("force", opts, { desc = "Run selection" }))
-		
+
 		vim.keymap.set("n", "<localleader>R", function()
 			local iron_ok, _ = pcall(vim.cmd, "IronRestart")
-			
+
 			if iron_ok then
 				vim.notify("🔄 REPL restarted", vim.log.levels.INFO)
 			else
@@ -252,15 +262,14 @@ vim.api.nvim_create_autocmd("FileType", {
 			pcall(vim.cmd, "IronRepl")
 			vim.notify("🚀 Iron REPL started", vim.log.levels.INFO)
 		end, vim.tbl_extend("force", opts, { desc = "Start REPL" }))
-		
+
 		vim.keymap.set("n", "<localleader>rf", function()
 			pcall(vim.cmd, "IronFocus")
 		end, vim.tbl_extend("force", opts, { desc = "Focus REPL" }))
-		
+
 		vim.keymap.set("n", "<localleader>rh", function()
 			pcall(vim.cmd, "IronHide")
 		end, vim.tbl_extend("force", opts, { desc = "Hide REPL" }))
-		
 	end,
 })
 
@@ -270,3 +279,11 @@ vim.keymap.set("n", "<leader>Pd", "<cmd>PyDetectVenv<cr>", { desc = "Detect Pyth
 vim.keymap.set("n", "<leader>Ps", "<cmd>VenvSelect<cr>", { desc = "Select Python venv" })
 vim.keymap.set("n", "<leader>Js", "<cmd>JupyterStart<cr>", { desc = "Start Jupyter" })
 vim.keymap.set("n", "<leader>Jq", "<cmd>JupyterStop<cr>", { desc = "Stop Jupyter" })
+
+-- Keymaps for Lazy
+vim.keymap.set(
+	"n",
+	"<leader>ps",
+	"<cmd>Lazy sync<cr>",
+	{ desc = "Open Lazy.nvim and sync with new plugins or updates" }
+)
