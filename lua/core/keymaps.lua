@@ -66,6 +66,30 @@ vim.keymap.set("n", "<leader>sc", "<cmd>set filetype=okconfig<cr>", { desc = "Se
 -- Fix line endings (convert CRLF to LF)
 vim.keymap.set("n", "<leader>fx", "<cmd>FixLineEndings<cr>", { desc = "Fix line endings" })
 
+-- Spectre keymaps (deferred to ensure plugin is loaded)
+vim.defer_fn(function()
+	local spectre_ok, spectre = pcall(require, "spectre")
+	if not spectre_ok then
+		return
+	end
+
+	vim.keymap.set("n", "<leader>fr", function()
+		spectre.toggle()
+	end, { desc = "Spectre: Toggle Find/Replace" })
+
+	vim.keymap.set("n", "<leader>fR", function()
+		spectre.open_visual({ select_word = true })
+	end, { desc = "Spectre: Replace current word" })
+
+	vim.keymap.set("v", "<leader>fR", function()
+		spectre.open_visual()
+	end, { desc = "Spectre: Replace selection" })
+
+	vim.keymap.set("n", "<leader>fP", function()
+		spectre.open_file_search({ select_word = true })
+	end, { desc = "Spectre: Replace in current file" })
+end, 100) -- Delay to ensure lazy.nvim loaded plugins
+
 -- Tab keymaps with priority: Copilot > LuaSnip > Default
 vim.keymap.set({ "i", "s" }, "<Tab>", function()
 	-- 1. Check for Copilot suggestion first (highest priority)

@@ -42,7 +42,7 @@ return {
 			},
 		})
 
-		-- Keymaps moved to lua/core/keymaps-central.lua for better organization
-		-- This avoids conflicts and centralizes all keymaps in one place
+		-- Keymaps are defined in lua/core/keymaps.lua with deferred loading
+		-- Bindings: <leader>fr (toggle), <leader>fR (replace word/selection), <leader>fP (replace in file)
 	end,
 }

@@ -181,13 +181,15 @@ return {
 				{ "<leader>sm", desc = "Jump to Mark" },
 				{ "<leader>sM", desc = "Man Pages" },
 				{ "<leader>so", desc = "Options" },
-				{ "<leader>sp", desc = "Spectre Search in Current File" },
+				{ "<leader>fr", desc = "Spectre Find/Replace" },
+				{ "<leader>fR", desc = "Spectre Replace Word/Selection" },
+				{ "<leader>fP", desc = "Spectre Replace in File" },
 				{ "<leader>sq", desc = "Quickfix List" },
 				{ "<leader>sR", desc = "Resume" },
 				{ "<leader>ss", desc = "Goto Symbol" },
 				{ "<leader>sS", desc = "Goto Symbol (Workspace)" },
 				{ "<leader>sw", desc = "Word (Root Dir)" },
-				{ "<leader>sW", desc = "Spectre Search Word/Selection" },
+				{ "<leader>sW", desc = "Selection (Root Dir)" },
 
 
 				-- Test operations (Neotest)
